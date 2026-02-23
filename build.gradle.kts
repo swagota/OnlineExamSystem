@@ -36,6 +36,8 @@ javafx {
 }
 
 dependencies {
+    implementation(files("C:/Users/HP/Downloads/fontawesomefx-8.2.jar"))
+    implementation(files("C:/Users/HP/Downloads/mysql-connector-java-5.1.48.jar"))
     implementation("org.controlsfx:controlsfx:11.2.1")
     implementation("com.dlsc.formsfx:formsfx-core:11.6.0") {
         exclude(group = "org.openjfx")
