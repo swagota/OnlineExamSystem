@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.HelloController">
+   <children>
+      <AnchorPane fx:id="login_form" layoutX="300.0" layoutY="135.0" prefHeight="500.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutX="400.0" prefHeight="500.0" prefWidth="400.0" styleClass="login-bg" stylesheets="@../../../design.css">
+               <children>
+                  <FontAwesomeIcon fill="WHITE" glyphName="USER" layoutX="162.0" layoutY="148.0" selectionEnd="9" size="8em" />
+                  <Label layoutX="145.0" layoutY="162.0" text="Sign In" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB" size="40.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="username" layoutX="90.0" layoutY="243.0" onMouseClicked="#textfield" onMouseDragged="#textfield" prefHeight="28.0" prefWidth="220.0" promptText="Username" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <PasswordField fx:id="password" layoutX="90.0" layoutY="286.0" onMouseClicked="#textfield" onMouseDragged="#textfield" prefHeight="28.0" prefWidth="220.0" promptText="Password" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </PasswordField>
+                  <Button fx:id="login_btn" layoutX="153.0" layoutY="354.0" mnemonicParsing="false" onAction="#login" prefHeight="38.0" prefWidth="90.0" styleClass="button-design" stylesheets="@../../../design.css" text="Login">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Hyperlink fx:id="create_acc" layoutX="128.0" layoutY="434.0" onAction="#changeForm" styleClass="hypertext-design" stylesheets="@../../../design.css" text="Create new Account">
+                     <font>
+                        <Font name="Microsoft Sans Serif" size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Button layoutX="359.0" layoutY="10.0" mnemonicParsing="false" onAction="#exit" prefHeight="18.0" prefWidth="26.0" styleClass="exit" stylesheets="@../../../design.css" />
+                  <FontAwesomeIcon fill="WHITE" glyphName="CLOSE" layoutX="367.0" layoutY="27.0" selectionEnd="9" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="500.0" prefWidth="400.0" styleClass="login-card" stylesheets="@../../../design.css">
+               <children>
+                  <Label fx:id="exam" layoutX="33.0" layoutY="250.0" styleClass="macro" stylesheets="@../../../design.css" text="EXAMORA">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="70.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="e" layoutX="113.0" layoutY="74.0" styleClass="macro" stylesheets="@../../../design.css" text="📚">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="150.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="signup_form" prefHeight="500.0" prefWidth="800.0" visible="false">
+         <children>
+            <AnchorPane prefHeight="500.0" prefWidth="400.0" styleClass="login-bg" stylesheets="@../../../design.css">
+               <children>
+                  <FontAwesomeIcon fill="WHITE" glyphName="USER_PLUS" layoutX="145.0" layoutY="146.0" selectionEnd="9" size="8em" />
+                  <Label layoutX="130.0" layoutY="160.0" text="Sign Up" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB" size="40.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="su_username" layoutX="90.0" layoutY="318.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Username" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <PasswordField fx:id="su_password" layoutX="90.0" layoutY="363.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Password" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </PasswordField>
+                  <Button fx:id="signup_btn" layoutX="149.0" layoutY="417.0" mnemonicParsing="false" onAction="#signup" prefHeight="38.0" prefWidth="90.0" styleClass="button-design" stylesheets="@../../../design.css" text="SignUP">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Hyperlink fx:id="login_acc" layoutX="131.0" layoutY="465.0" onAction="#changeForm" styleClass="hypertext-design" stylesheets="@../../../design.css" text="Login your Account">
+                     <font>
+                        <Font name="Microsoft Sans Serif" size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <TextField fx:id="su_email" layoutX="90.0" layoutY="274.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Email Address" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <ComboBox fx:id="role_box" layoutX="90.0" layoutY="228.0" prefHeight="28.0" prefWidth="220.0" promptText="Role" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="400.0" prefHeight="500.0" prefWidth="400.0" styleClass="login-card" stylesheets="@../../../design.css">
+               <children>
+                  <Label fx:id="exam1" layoutX="33.0" layoutY="250.0" styleClass="macro" stylesheets="@../../../design.css" text="EXAMORA">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="70.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="e1" layoutX="113.0" layoutY="74.0" styleClass="macro" stylesheets="@../../../design.css" text="📚">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="150.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="359.0" layoutY="14.0" mnemonicParsing="false" onAction="#exit" prefHeight="18.0" prefWidth="26.0" styleClass="exit" stylesheets="@../../../design.css" />
+                  <FontAwesomeIcon fill="WHITE" glyphName="CLOSE" layoutX="367.0" layoutY="31.0" selectionEnd="9" text="" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
