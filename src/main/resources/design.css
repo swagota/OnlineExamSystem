@@ -1,0 +1,47 @@
+.login-bg{
+    -fx-background-color:linear-gradient(to bottom right, #6a9ae7, #426fb1);
+}
+
+.login-card{
+    -fx-background-color:#30363f;
+}
+
+.textfield-design{
+    -fx-background-color:#eef3ff;
+    -fx-background-radius:20px;
+    -fx-border-color:#30363f;
+    -fx-border-radius:20px;
+    -fx-text-inner-color:#000;
+}
+
+.button-design{
+    -fx-background-color:#30363f;
+    -fx-background-radius:40px;
+    -fx-text-fill:#fff;
+    -fx-cursor:hand;
+}
+
+.button-design:hover{
+    -fx-background-color:#6a9ae7;
+}
+
+.hypertext-design{
+    -fx-text-fill:#fff;
+    -fx-border-color:none;
+    -fx-border-width:0px;
+}
+
+.macro{
+    -fx-text-fill:#6a9ae7;
+    -fx-cursor:hand;
+}
+
+.exit{
+    -fx-background-color:#e05a61;
+    -fx-cursor:hand;
+    -fx-background-radius:50px;
+}
+
+.exit:hover{
+    -fx-background-color:#f48188;
+}
