@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.buet.exam_system.ExamController">
+
+    <center>
+        <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+
+            <Label fx:id="questionLabel" text="What is your name?" />
+
+
+
+            <RadioButton fx:id="option1" text="mina"/>
+            <RadioButton fx:id="option2" text="mita"/>
+            <RadioButton fx:id="option3" text="all"/>
+            <RadioButton fx:id="option4" text="none"/>
+
+            <HBox spacing="20" alignment="CENTER_RIGHT">
+                <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
+                <Button fx:id="submitBtn" text="Submit" onAction="#handleSubmit"/>
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
