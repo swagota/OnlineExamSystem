@@ -1,12 +1,16 @@
 package com.buet.exam_system;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
+import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class ExamController {
+public class ExamController implements Initializable {
 
     @FXML private Label questionLabel;
     @FXML private RadioButton option1;
@@ -18,12 +22,14 @@ public class ExamController {
 
     private ToggleGroup optionsGroup;
 
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
     private int score = 0;
 
-    @FXML
-    public void initialize() {
+    private Connection connect;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
 
         optionsGroup = new ToggleGroup();
         option1.setToggleGroup(optionsGroup);
@@ -31,31 +37,49 @@ public class ExamController {
         option3.setToggleGroup(optionsGroup);
         option4.setToggleGroup(optionsGroup);
 
+        loadQuestionsFromDatabase();
 
-        questions = new ArrayList<>();
+        if (!questions.isEmpty()) {
+            loadQuestion();
+        }
+    }
 
-        questions.add(new Question(
-                "What is Java?",
-                new String[]{"Programming Language", "Animal", "Car", "Fruit"},
-                0
-        ));
+    private void loadQuestionsFromDatabase() {
 
-        questions.add(new Question(
-                "2 + 2 = ?",
-                new String[]{"3", "4", "5", "6"},
-                1
-        ));
+        try {
+            connect = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/admin",
+                    "root",
+                    ""
+            );
 
-        questions.add(new Question(
-                "Which one is OOP concept?",
-                new String[]{"Encapsulation", "Photosynthesis", "Gravity", "Oxygen"},
-                0
-        ));
+            String sql = "SELECT * FROM questions";
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
-        loadQuestion();
+            while (rs.next()) {
+
+                String questionText = rs.getString("question");
+
+                String[] options = {
+                        rs.getString("option1"),
+                        rs.getString("option2"),
+                        rs.getString("option3"),
+                        rs.getString("option4")
+                };
+
+                int correctIndex = rs.getInt("correct_answer") - 1;
+
+                questions.add(new Question(questionText, options, correctIndex));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadQuestion() {
+
         Question q = questions.get(currentQuestionIndex);
 
         questionLabel.setText(q.getQuestion());
@@ -102,12 +126,14 @@ public class ExamController {
         if (selected == option3) selectedIndex = 2;
         if (selected == option4) selectedIndex = 3;
 
-        if (selectedIndex == questions.get(currentQuestionIndex).getCorrectIndex()) {
+        if (selectedIndex ==
+                questions.get(currentQuestionIndex).getCorrectIndex()) {
             score++;
         }
     }
 
     private void showResult() {
+
         questionLabel.setText("Exam Finished! Your Score: "
                 + score + " / " + questions.size());
 
