@@ -20,6 +20,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
+import com.buet.exam_system.DashboardController;
 
 public class HelloController implements Initializable {
 
@@ -120,14 +121,20 @@ public class HelloController implements Initializable {
                 } else if(role == 2) {
                     // STUDENT LOGIN
                     login_btn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("Dashboard.fxml"));
+
+                    // CHANGE THIS ↓ use FXMLLoader object instead
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
+                    Parent root = loader.load();
+
+                    // PASS USERNAME TO DASHBOARD ↓
+                    DashboardController dashboardController = loader.getController();
+                    dashboardController.setStudentName(username.getText());
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setTitle("Student Dashboard");
                     stage.show();
-                    // open student dashboard here later
                 }
 
             }
