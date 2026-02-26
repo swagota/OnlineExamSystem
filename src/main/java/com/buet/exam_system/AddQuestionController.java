@@ -37,6 +37,12 @@ public class AddQuestionController implements Initializable {
 
     private Connection connect;
 
+    private String subject;
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
     @FXML
     private void saveQuestion() {
 
@@ -50,7 +56,7 @@ public class AddQuestionController implements Initializable {
                 return;
             }
 
-            String sql = "INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (?,?,?,?,?,?)";
+            String sql = "INSERT INTO questions (question, option1, option2, option3, option4, correct_answer,subject) VALUES (?,?,?,?,?,?,?)";
 
             PreparedStatement ps = connect.prepareStatement(sql);
 
@@ -60,7 +66,7 @@ public class AddQuestionController implements Initializable {
             ps.setString(4, option3Field.getText());
             ps.setString(5, option4Field.getText());
             ps.setInt(6, Integer.parseInt(correctBox.getValue()));
-
+            ps.setString(7, subject);
             ps.executeUpdate();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -82,7 +88,7 @@ public class AddQuestionController implements Initializable {
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/teacherDashboard.fxml")
+                    getClass().getResource("/com/buet/exam_system/TeacherProfile.fxml")
             );
 
             Scene scene = new Scene(loader.load());

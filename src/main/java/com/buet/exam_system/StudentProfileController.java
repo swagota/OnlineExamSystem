@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-public class DashboardController {
+public class StudentProfileController {
 
     @FXML
     private Button startBtn;

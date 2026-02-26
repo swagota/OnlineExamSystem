@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-public class TeacherController implements Initializable {
+public class TeacherProfileController implements Initializable {
 //    @FXML
 //    private void saveQuestion() {
 //        System.out.println("Save clicked");
@@ -21,13 +21,20 @@ public class TeacherController implements Initializable {
     private Button addQuestionBtn;
 
     @FXML
+    private Button availableExamBtn;
+
+    @FXML
+    private Button leaderboardBtn;
+
+    @FXML
     private void handleAddQuestion() {
 
         //System.out.println("Button clicked");
 
         try {
+            SubjectPageController.setMode("ADD");
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/AddQuestion.fxml")
+                    getClass().getResource("/com/buet/exam_system/SubjectPage.fxml")
             );
 
             //System.out.println("FXML loading...");
@@ -36,6 +43,30 @@ public class TeacherController implements Initializable {
 
             Stage stage = (Stage) addQuestionBtn.getScene().getWindow();
             stage.setScene(scene);
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLeaderboard() {
+        System.out.println("Leaderboard clicked");
+    }
+
+    @FXML
+    private void handleAvailableExams()
+    {
+        System.out.println("Available Exams clicked");
+        try {
+            SubjectPageController.setMode("VIEW");
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/buet/exam_system/SubjectPage.fxml")
+            );
+
+            Stage stage = (Stage) availableExamBtn.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
             stage.show();
 
         } catch (Exception e) {

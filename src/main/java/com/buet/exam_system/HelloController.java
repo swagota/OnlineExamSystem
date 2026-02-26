@@ -20,7 +20,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
-import com.buet.exam_system.DashboardController;
 
 public class HelloController implements Initializable {
 
@@ -108,7 +107,7 @@ public class HelloController implements Initializable {
                 if(role == 1) {
                     // TEACHER LOGIN
                     login_btn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("teacherDashboard.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("TeacherProfile.fxml"));
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -123,11 +122,11 @@ public class HelloController implements Initializable {
                     login_btn.getScene().getWindow().hide();
 
                     // CHANGE THIS ↓ use FXMLLoader object instead
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentProfile.fxml"));
                     Parent root = loader.load();
 
                     // PASS USERNAME TO DASHBOARD ↓
-                    DashboardController dashboardController = loader.getController();
+                    StudentProfileController dashboardController = loader.getController();
                     dashboardController.setStudentName(username.getText());
 
                     Scene scene = new Scene(root);
