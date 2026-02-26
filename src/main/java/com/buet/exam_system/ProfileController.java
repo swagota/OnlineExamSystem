@@ -29,10 +29,15 @@ public class ProfileController implements Initializable {
     private String fatherEmail;
     private String motherEmail;
     private int role;
+    private String returnTarget = "STUDENT"; // "STUDENT" or "TEACHER"
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         backBtn.setOnAction(e -> handleBack());
+    }
+
+    public void setReturnTarget(String target) {
+        this.returnTarget = target;
     }
 
     public void setProfileInfo(String username, String email, String fatherEmail, String motherEmail, int role) {
@@ -44,7 +49,7 @@ public class ProfileController implements Initializable {
 
         profileName.setText(username);
         profileUsername.setText(username);
-        profileEmail.setText(email);
+        profileEmail.setText(email != null ? email : "N/A");
         profileFatherEmail.setText(fatherEmail != null ? fatherEmail : "N/A");
         profileMotherEmail.setText(motherEmail != null ? motherEmail : "N/A");
 
@@ -58,16 +63,30 @@ public class ProfileController implements Initializable {
         try {
             Stage currentStage = (Stage) backBtn.getScene().getWindow();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com/buet/exam_system/StudentDashboard.fxml"));
-            Parent root = loader.load();
+            if ("TEACHER".equals(returnTarget)) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                        "/com/buet/exam_system/teacherDashboard.fxml"));
+                Parent root = loader.load();
 
-            StudentDashboardController dc = loader.getController();
-            dc.setStudentInfo(username, email, fatherEmail, motherEmail, role);
+                TeacherDashboardController tc = loader.getController();
+                tc.setTeacherInfo(username, email, fatherEmail, motherEmail);
 
-            currentStage.setScene(new Scene(root));
-            currentStage.setTitle("Student Dashboard");
-            currentStage.show();
+                currentStage.setScene(new Scene(root));
+                currentStage.setTitle("Teacher Dashboard");
+                currentStage.show();
+
+            } else {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                        "/com/buet/exam_system/StudentDashboard.fxml"));
+                Parent root = loader.load();
+
+                StudentDashboardController dc = loader.getController();
+                dc.setStudentInfo(username, email, fatherEmail, motherEmail, role);
+
+                currentStage.setScene(new Scene(root));
+                currentStage.setTitle("Student Dashboard");
+                currentStage.show();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
