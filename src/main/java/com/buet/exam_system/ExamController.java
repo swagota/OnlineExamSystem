@@ -1,8 +1,12 @@
 package com.buet.exam_system;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.sql.*;
@@ -13,6 +17,7 @@ import java.util.ResourceBundle;
 public class ExamController implements Initializable {
 
     @FXML private Label questionLabel;
+    @FXML private Label timerLabel;
     @FXML private RadioButton option1;
     @FXML private RadioButton option2;
     @FXML private RadioButton option3;
@@ -26,6 +31,10 @@ public class ExamController implements Initializable {
     private int currentQuestionIndex = 0;
     private int score = 0;
 
+    private int totalSeconds = 0;   // set via setExamId()
+    private Timeline countdown;
+
+    private int examId;
     private Connection connect;
 
     @Override
@@ -36,11 +45,54 @@ public class ExamController implements Initializable {
         option2.setToggleGroup(optionsGroup);
         option3.setToggleGroup(optionsGroup);
         option4.setToggleGroup(optionsGroup);
-
+    }
+    public void setExamId(int examId) {
+        this.examId = examId;
+        loadExamTime();
         loadQuestionsFromDatabase();
-
         if (!questions.isEmpty()) {
             loadQuestion();
+        }
+        startTimer();
+    }
+
+    private void loadExamTime() {
+        try (Connection connect = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
+            String sql = "SELECT total_time FROM exams WHERE id = ?";
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setInt(1, examId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                totalSeconds = rs.getInt("total_time") * 60; // stored as minutes
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startTimer() {
+        updateTimerLabel();
+        countdown = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            totalSeconds--;
+            updateTimerLabel();
+            if (totalSeconds <= 0) {
+                countdown.stop();
+                checkAnswer();
+                showResult();
+            }
+        }));
+        countdown.setCycleCount(Animation.INDEFINITE);
+        countdown.play();
+    }
+
+    private void updateTimerLabel() {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        timerLabel.setText(String.format("⏱ %02d:%02d", minutes, seconds));
+        // Turn red in last 30 seconds
+        if (totalSeconds <= 30) {
+            timerLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         }
     }
 
@@ -53,8 +105,9 @@ public class ExamController implements Initializable {
                     ""
             );
 
-            String sql = "SELECT * FROM questions";
+            String sql = "SELECT * FROM questions WHERE exam_id = ?";
             PreparedStatement ps = connect.prepareStatement(sql);
+            ps.setInt(1, examId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -81,9 +134,8 @@ public class ExamController implements Initializable {
     private void loadQuestion() {
 
         Question q = questions.get(currentQuestionIndex);
-
-        questionLabel.setText(q.getQuestion());
-
+        int qNum = currentQuestionIndex + 1;
+        questionLabel.setText("Q" + qNum + ". " + q.getQuestion());
         option1.setText(q.getOptions()[0]);
         option2.setText(q.getOptions()[1]);
         option3.setText(q.getOptions()[2]);
@@ -102,6 +154,7 @@ public class ExamController implements Initializable {
         if (currentQuestionIndex < questions.size()) {
             loadQuestion();
         } else {
+            if (countdown != null) countdown.stop();
             showResult();
         }
     }
@@ -109,6 +162,7 @@ public class ExamController implements Initializable {
     @FXML
     private void handleSubmit() {
         checkAnswer();
+        if (countdown != null) countdown.stop();
         showResult();
     }
 
@@ -134,9 +188,9 @@ public class ExamController implements Initializable {
 
     private void showResult() {
 
-        questionLabel.setText("Exam Finished! Your Score: "
+        questionLabel.setText("✅Exam Finished! Your Score: "
                 + score + " / " + questions.size());
-
+        timerLabel.setText("Time's up!");
         option1.setDisable(true);
         option2.setDisable(true);
         option3.setDisable(true);
