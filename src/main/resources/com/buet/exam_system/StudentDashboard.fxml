@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="900.0"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.buet.exam_system.StudentProfileController"
+            fx:controller="com.buet.exam_system.StudentDashboardController"
             style="-fx-background-color: #f0f4ff;">
 
    <!-- TOP BAR -->

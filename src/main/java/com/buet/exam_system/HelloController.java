@@ -107,7 +107,7 @@ public class HelloController implements Initializable {
                 if(role == 1) {
                     // TEACHER LOGIN
                     login_btn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("TeacherProfile.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("TeacherDashboard.fxml"));
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -122,11 +122,11 @@ public class HelloController implements Initializable {
                     login_btn.getScene().getWindow().hide();
 
                     // CHANGE THIS ↓ use FXMLLoader object instead
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentProfile.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentDashboard.fxml"));
                     Parent root = loader.load();
 
                     // PASS USERNAME TO DASHBOARD ↓
-                    StudentProfileController dashboardController = loader.getController();
+                    StudentDashboardController dashboardController = loader.getController();
                     dashboardController.setStudentName(username.getText());
 
                     Scene scene = new Scene(root);
