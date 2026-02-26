@@ -65,7 +65,7 @@ public class ProfileController implements Initializable {
 
             if ("TEACHER".equals(returnTarget)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                        "/com/buet/exam_system/teacherDashboard.fxml"));
+                        "/com/buet/exam_system/TeacherDashboard.fxml"));
                 Parent root = loader.load();
 
                 TeacherDashboardController tc = loader.getController();

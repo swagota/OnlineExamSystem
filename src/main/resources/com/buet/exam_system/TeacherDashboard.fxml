@@ -33,7 +33,7 @@
         <Button fx:id="availableExamBtn" layoutX="20" layoutY="215" onAction="#handleAvailableExams" prefHeight="45" prefWidth="160" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 14px; -fx-background-radius: 8px;" text="📋  Available Exams" />
 
         <Button fx:id="leaderboardBtn" layoutX="20" layoutY="275" onAction="#handleLeaderboard" prefHeight="45" prefWidth="160" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 14px; -fx-background-radius: 8px;" text="🏆  Leaderboard" />
-      <Button fx:id="profileBtn" layoutX="20.0" layoutY="333.0" onAction="#handleLeaderboard" prefHeight="45" prefWidth="160" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 14px; -fx-background-radius: 8px;" text="👤  Profile" />
+        <Button fx:id="profileBtn" layoutX="20.0" layoutY="333.0" onAction="#handleProfile" prefHeight="45" prefWidth="160" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 14px; -fx-background-radius: 8px;" text="👤  Profile" />
 
     </AnchorPane>
 

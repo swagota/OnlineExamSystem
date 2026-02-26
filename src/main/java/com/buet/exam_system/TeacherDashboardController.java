@@ -31,17 +31,23 @@ public class TeacherDashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        logoutBtn.setOnAction(e -> handleLogout());
-        profileBtn.setOnAction(e -> handleProfile());
+        if (logoutBtn != null) logoutBtn.setOnAction(e -> handleLogout());
+        if (profileBtn != null) profileBtn.setOnAction(e -> handleProfile());
     }
 
+    /** Partner এর version — email, fatherEmail, motherEmail সহ */
     public void setTeacherInfo(String username, String email, String fatherEmail, String motherEmail) {
         this.currentUsername    = username;
         this.currentEmail       = email;
         this.currentFatherEmail = fatherEmail;
         this.currentMotherEmail = motherEmail;
-        welcomeLabel.setText("WELCOME, " + username + "!");
-        teacherName.setText(username);
+        if (welcomeLabel != null) welcomeLabel.setText("WELCOME, " + username + "!");
+        if (teacherName != null) teacherName.setText(username);
+    }
+
+    /** তোমার version — backward compatibility এর জন্য রাখা */
+    public void setTeacherName(String name) {
+        setTeacherInfo(name, "", "", "");
     }
 
     @FXML
@@ -69,11 +75,15 @@ public class TeacherDashboardController implements Initializable {
     @FXML
     private void handleAddQuestion() {
         try {
-            SubjectPageController.setMode("ADD");
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/SubjectPage.fxml"));
+                    getClass().getResource("/com/buet/exam_system/CreateExam.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            CreateExamController controller = loader.getController();
+            controller.setTeacherName(currentUsername);
+
             Stage stage = (Stage) addQuestionBtn.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
+            stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,11 +93,15 @@ public class TeacherDashboardController implements Initializable {
     @FXML
     private void handleAvailableExams() {
         try {
-            SubjectPageController.setMode("VIEW");
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/buet/exam_system/SubjectPage.fxml"));
+            Parent root = loader.load();
+
+            SubjectPageController controller = loader.getController();
+            controller.setStudentMode(false, "");
+
             Stage stage = (Stage) availableExamBtn.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
