@@ -13,10 +13,9 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ButtonBar layoutX="354.0" layoutY="303.0" prefHeight="40.0" prefWidth="200.0">
-        <buttons>
-          <Button fx:id="addQuestionBtn" mnemonicParsing="false" onAction="#handleAddQuestion" prefHeight="26.0" prefWidth="208.0" text="Add Questions" />
-        </buttons>
-      </ButtonBar>
+      <ButtonBar layoutX="354.0" layoutY="303.0" prefHeight="40.0" prefWidth="200.0" />
+    <Button fx:id="addQuestionBtn" layoutX="8.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleAddQuestion" prefHeight="26.0" prefWidth="208.0" text="Create Exam" />
+      <Button fx:id="availableExamBtn" layoutX="6.0" layoutY="211.0" mnemonicParsing="false" onAction="#handleAvailableExams" prefHeight="26.0" prefWidth="208.0" text="Available Exams" />
+      <Button fx:id="leaderboardBtn" layoutX="6.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleLeaderboard" prefHeight="26.0" prefWidth="208.0" text="Leaderboard" />
    </children>
 </AnchorPane>

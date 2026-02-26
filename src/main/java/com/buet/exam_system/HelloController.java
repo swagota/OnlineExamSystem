@@ -71,12 +71,6 @@ public class HelloController implements Initializable {
     @FXML
     private TextField username;
 
-    @FXML
-    private TextField su_father_email;
-
-    @FXML
-    private TextField su_mother_email;
-
 
     private Connection connect;
     private PreparedStatement statement;
@@ -133,12 +127,7 @@ public class HelloController implements Initializable {
 
                     // PASS USERNAME TO DASHBOARD ↓
                     StudentDashboardController dashboardController = loader.getController();
-                    dashboardController.setStudentInfo(
-                            username.getText(),
-                            result.getString("email"),
-                            result.getString("father_email"),
-                            result.getString("mother_email"),
-                            role);
+                    dashboardController.setStudentName(username.getText());
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -158,23 +147,27 @@ public class HelloController implements Initializable {
 
     public void signup(ActionEvent event){
         connect = connectDb();
+
         try{
-            String sql = "INSERT INTO data (username, password, email, role, father_email, mother_email) VALUES(?,?,?,?,?,?)";
+            String sql="INSERT INTO data VALUES(?,?,?,?)";
             statement = connect.prepareStatement(sql);
-            statement.setString(1, su_username.getText());
-            statement.setString(2, su_password.getText());
-            statement.setString(3, su_email.getText());
+            statement.setString(1,su_username.getText());
+            statement.setString(2,su_password.getText());
+            statement.setString(3,su_email.getText());
             String selectedRole = role_box.getValue();
-            int role = selectedRole.equals("Teacher") ? 1 : 2;
+            int role;
+            if(selectedRole.equals("Teacher")) {
+                role = 1;
+            } else {
+                role = 2;
+            }
             statement.setInt(4, role);
-            statement.setString(5, su_father_email.getText());
-            statement.setString(6, su_mother_email.getText());
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Successful Create new Account!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Successful Create new Account!","Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch(Exception e){
-            e.printStackTrace();
+        }catch(Exception e){
+         e.printStackTrace();
         }
     }
 
