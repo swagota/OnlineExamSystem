@@ -20,7 +20,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
-import com.buet.exam_system.DashboardController;
 
 public class HelloController implements Initializable {
 
@@ -72,6 +71,12 @@ public class HelloController implements Initializable {
     @FXML
     private TextField username;
 
+    @FXML
+    private TextField su_father_email;
+
+    @FXML
+    private TextField su_mother_email;
+
 
     private Connection connect;
     private PreparedStatement statement;
@@ -108,7 +113,7 @@ public class HelloController implements Initializable {
                 if(role == 1) {
                     // TEACHER LOGIN
                     login_btn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("teacherDashboard.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("TeacherDashboard.fxml"));
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -123,12 +128,17 @@ public class HelloController implements Initializable {
                     login_btn.getScene().getWindow().hide();
 
                     // CHANGE THIS ↓ use FXMLLoader object instead
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentDashboard.fxml"));
                     Parent root = loader.load();
 
                     // PASS USERNAME TO DASHBOARD ↓
-                    DashboardController dashboardController = loader.getController();
-                    dashboardController.setStudentName(username.getText());
+                    StudentDashboardController dashboardController = loader.getController();
+                    dashboardController.setStudentInfo(
+                            username.getText(),
+                            result.getString("email"),
+                            result.getString("father_email"),
+                            result.getString("mother_email"),
+                            role);
 
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -148,27 +158,23 @@ public class HelloController implements Initializable {
 
     public void signup(ActionEvent event){
         connect = connectDb();
-
         try{
-            String sql="INSERT INTO data VALUES(?,?,?,?)";
+            String sql = "INSERT INTO data (username, password, email, role, father_email, mother_email) VALUES(?,?,?,?,?,?)";
             statement = connect.prepareStatement(sql);
-            statement.setString(1,su_username.getText());
-            statement.setString(2,su_password.getText());
-            statement.setString(3,su_email.getText());
+            statement.setString(1, su_username.getText());
+            statement.setString(2, su_password.getText());
+            statement.setString(3, su_email.getText());
             String selectedRole = role_box.getValue();
-            int role;
-            if(selectedRole.equals("Teacher")) {
-                role = 1;
-            } else {
-                role = 2;
-            }
+            int role = selectedRole.equals("Teacher") ? 1 : 2;
             statement.setInt(4, role);
+            statement.setString(5, su_father_email.getText());
+            statement.setString(6, su_mother_email.getText());
             statement.execute();
 
-            JOptionPane.showMessageDialog(null,"Successful Create new Account!","Examora Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Successful Create new Account!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
-        }catch(Exception e){
-         e.printStackTrace();
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 

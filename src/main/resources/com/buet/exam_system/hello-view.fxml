@@ -66,38 +66,48 @@
          <children>
             <AnchorPane prefHeight="500.0" prefWidth="400.0" styleClass="login-bg" stylesheets="@../../../design.css">
                <children>
-                  <FontAwesomeIcon fill="WHITE" glyphName="USER_PLUS" layoutX="145.0" layoutY="146.0" selectionEnd="9" size="8em" />
-                  <Label layoutX="130.0" layoutY="160.0" text="Sign Up" textFill="WHITE">
+                  <FontAwesomeIcon fill="WHITE" glyphName="USER_PLUS" layoutX="145.0" layoutY="96.0" selectionEnd="9" size="8em" />
+                  <Label layoutX="130.0" layoutY="110.0" text="Sign Up" textFill="WHITE">
                      <font>
                         <Font name="Berlin Sans FB" size="40.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="su_username" layoutX="90.0" layoutY="318.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Username" styleClass="textfield-design" stylesheets="@../../../design.css">
+                  <TextField fx:id="su_username" layoutX="90.0" layoutY="335.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Username" styleClass="textfield-design" stylesheets="@../../../design.css">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <PasswordField fx:id="su_password" layoutX="90.0" layoutY="363.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Password" styleClass="textfield-design" stylesheets="@../../../design.css">
+                  <PasswordField fx:id="su_password" layoutX="90.0" layoutY="376.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Password" styleClass="textfield-design" stylesheets="@../../../design.css">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </PasswordField>
-                  <Button fx:id="signup_btn" layoutX="149.0" layoutY="417.0" mnemonicParsing="false" onAction="#signup" prefHeight="38.0" prefWidth="90.0" styleClass="button-design" stylesheets="@../../../design.css" text="SignUP">
+                  <Button fx:id="signup_btn" layoutX="149.0" layoutY="428.0" mnemonicParsing="false" onAction="#signup" prefHeight="38.0" prefWidth="90.0" styleClass="button-design" stylesheets="@../../../design.css" text="SignUP">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Button>
-                  <Hyperlink fx:id="login_acc" layoutX="131.0" layoutY="465.0" onAction="#changeForm" styleClass="hypertext-design" stylesheets="@../../../design.css" text="Login your Account">
+                  <Hyperlink fx:id="login_acc" layoutX="131.0" layoutY="476.0" onAction="#changeForm" styleClass="hypertext-design" stylesheets="@../../../design.css" text="Login your Account">
                      <font>
                         <Font name="Microsoft Sans Serif" size="14.0" />
                      </font>
                   </Hyperlink>
-                  <TextField fx:id="su_email" layoutX="90.0" layoutY="274.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Email Address" styleClass="textfield-design" stylesheets="@../../../design.css">
+                  <TextField fx:id="su_email" layoutX="90.0" layoutY="206.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Your Email Address" styleClass="textfield-design" stylesheets="@../../../design.css">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <ComboBox fx:id="role_box" layoutX="90.0" layoutY="228.0" prefHeight="28.0" prefWidth="220.0" promptText="Role" />
+                  <ComboBox fx:id="role_box" layoutX="90.0" layoutY="164.0" prefHeight="28.0" prefWidth="220.0" promptText="Role" />
+                  <TextField fx:id="su_father_email" layoutX="90.0" layoutY="250.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Father's Email Address" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="su_mother_email" layoutX="90.0" layoutY="294.0" onMouseClicked="#su_textfield" onMouseDragged="#su_textfield" prefHeight="28.0" prefWidth="220.0" promptText="Mother's Email Address" styleClass="textfield-design" stylesheets="@../../../design.css">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="400.0" prefHeight="500.0" prefWidth="400.0" styleClass="login-card" stylesheets="@../../../design.css">

@@ -82,7 +82,7 @@ public class AddQuestionController implements Initializable {
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/teacherDashboard.fxml")
+                    getClass().getResource("/com/buet/exam_system/TeacherDashboard.fxml")
             );
 
             Scene scene = new Scene(loader.load());

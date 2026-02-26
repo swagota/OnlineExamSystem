@@ -11,11 +11,7 @@ import javafx.scene.control.Button;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-public class TeacherController implements Initializable {
-//    @FXML
-//    private void saveQuestion() {
-//        System.out.println("Save clicked");
-//    }
+public class TeacherDashboardController implements Initializable {
 
     @FXML
     private Button addQuestionBtn;
