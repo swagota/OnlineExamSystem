@@ -112,17 +112,19 @@ public class HelloController implements Initializable {
                 JOptionPane.showMessageDialog(null,"Successful login!","Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
                 if(role == 1) {
-                    // TEACHER LOGIN
-                    login_btn.getScene().getWindow().hide();
-                    Parent root = FXMLLoader.load(getClass().getResource("teacherDashboard.fxml"));
 
+                    login_btn.getScene().getWindow().hide();
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/buet/exam_system/TeacherDashboard.fxml"));
+                    Parent root = loader.load();
+                    TeacherDashboardController controller = loader.getController();
+                    controller.setTeacherName(username.getText());
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setTitle("Teacher Dashboard");
                     stage.show();
 
-                    // open teacher dashboard here later
+
 
                 } else if(role == 2) {
                     // STUDENT LOGIN
