@@ -84,9 +84,13 @@ public class StudentDashboardController {
             Stage currentStage = (Stage) startBtn.getScene().getWindow();
 
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/Exam.fxml"));
+                    getClass().getResource("/com/buet/exam_system/SubjectPage.fxml"));
 
-            currentStage.setScene(new Scene(loader.load(), 1000, 600));
+            Parent root = loader.load();
+            SubjectPageController controller = loader.getController();
+            controller.setStudentMode(true, currentUsername);
+            //currentStage.setScene(new Scene(loader.load(), 1000, 600));
+            currentStage.setScene(new Scene(root));
             currentStage.show();
 
         } catch (Exception e) {
