@@ -6,23 +6,17 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.buet.exam_system.ExamController">
 
-    <top>
-        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 20 0 0;">
-            <Label fx:id="timerLabel" text="⏱ 00:00"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-        </HBox>
-    </top>
-
     <center>
-        <VBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+        <VBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 20;">
 
-            <Label fx:id="questionLabel" text="Loading question..."
-                   style="-fx-font-size: 15px; -fx-font-weight: bold;" wrapText="true" />
+            <Label fx:id="questionLabel" text="What is your name?" />
 
-            <RadioButton fx:id="option1" text="Option 1"/>
-            <RadioButton fx:id="option2" text="Option 2"/>
-            <RadioButton fx:id="option3" text="Option 3"/>
-            <RadioButton fx:id="option4" text="Option 4"/>
+
+
+            <RadioButton fx:id="option1" text="mina"/>
+            <RadioButton fx:id="option2" text="mita"/>
+            <RadioButton fx:id="option3" text="all"/>
+            <RadioButton fx:id="option4" text="none"/>
 
             <HBox spacing="20" alignment="CENTER_RIGHT">
                 <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
