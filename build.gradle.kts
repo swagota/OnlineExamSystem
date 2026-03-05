@@ -2,7 +2,7 @@ plugins {
     java
     application
     id("org.javamodularity.moduleplugin") version "1.8.15"
-    id("org.openjfx.javafxplugin") version "0.0.13"
+    id("org.openjfx.javafxplugin") version "0.1.0"
     id("org.beryx.jlink") version "2.25.0"
 }
 
@@ -28,6 +28,10 @@ tasks.withType<JavaCompile> {
 application {
     mainModule.set("com.buet.exam_system")
     mainClass.set("com.buet.exam_system.HelloApplication")
+    applicationDefaultJvmArgs = listOf(
+        "-Dprism.order=sw",
+        "-Djavafx.animation.fullspeed=true"
+    )
 }
 
 javafx {

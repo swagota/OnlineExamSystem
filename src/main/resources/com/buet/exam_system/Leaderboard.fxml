@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f0f4ff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.LeaderboardController">
+
+    <!-- TOP BAR -->
+    <AnchorPane layoutX="0" layoutY="0" prefHeight="70" prefWidth="900" style="-fx-background-color: #1a2a4a;">
+        <Label layoutX="30" layoutY="18" style="-fx-text-fill: white; -fx-font-size: 24px;                       -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
+        <Label layoutX="370" layoutY="22" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="🏆 Leaderboard" />
+        <Button fx:id="backBtn" layoutX="800" layoutY="17.0" onAction="#handleBack" prefHeight="35" prefWidth="80" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 13px; -fx-background-radius: 8px;                        -fx-font-weight: bold;" text="◀ Back" />
+    </AnchorPane>
+
+    <!-- DECORATIVE CIRCLES -->
+    <Circle layoutX="820" layoutY="500" radius="160" style="-fx-fill: rgba(106,154,231,0.05);" />
+    <Circle layoutX="80" layoutY="520" radius="110" style="-fx-fill: rgba(106,154,231,0.04);" />
+
+    <!-- EXAM SELECTOR CARD -->
+    <AnchorPane layoutX="145.0" layoutY="92.0" prefHeight="70" prefWidth="800" style="-fx-background-color: white; -fx-background-radius: 14px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 4);                        -fx-border-color: #dce8ff; -fx-border-radius: 14px; -fx-border-width: 1px;">
+        <Label layoutX="20" layoutY="24" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;" text="Select Exam:" />
+        <ComboBox fx:id="examComboBox" layoutX="130" layoutY="18" onAction="#handleExamSelected" prefHeight="35" prefWidth="500" style="-fx-background-color: #f0f4ff; -fx-font-size: 13px;                          -fx-background-radius: 8px; -fx-border-color: #dce8ff;                          -fx-border-radius: 8px;" />
+    </AnchorPane>
+
+    <!-- LEADERBOARD CARD -->
+    <AnchorPane layoutX="144.0" layoutY="193.0" prefHeight="400" prefWidth="800" style="-fx-background-color: white; -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 6);                        -fx-border-color: #dce8ff; -fx-border-radius: 16px; -fx-border-width: 1px;">
+
+        <!-- Header row -->
+        <AnchorPane prefHeight="50" prefWidth="800" style="-fx-background-color: linear-gradient(to right, #1a2a4a, #2a4a7a);                            -fx-background-radius: 16px 16px 0 0;">
+            <Label layoutX="30" layoutY="14" prefWidth="50" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="Rank" />
+            <Label layoutX="100" layoutY="14" prefWidth="250" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="Student" />
+            <Label layoutX="400" layoutY="14" prefWidth="150" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="Score" />
+            <Label layoutX="570" layoutY="14" prefWidth="150" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px;" text="Percentage" />
+        </AnchorPane>
+
+        <!-- Scrollable results -->
+        <ScrollPane fitToWidth="true" layoutY="50.0" prefHeight="350" prefWidth="800" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox fx:id="leaderboardContainer" spacing="0" style="-fx-background-color: transparent;" />
+        </ScrollPane>
+
+    </AnchorPane>
+
+</AnchorPane>

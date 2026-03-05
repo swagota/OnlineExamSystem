@@ -1,35 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.buet.exam_system.ExamController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f0f4ff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.ExamController">
 
-    <top>
-        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10 20 0 0;">
-            <Label fx:id="timerLabel" text="⏱ 00:00"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
-        </HBox>
-    </top>
 
-    <center>
-        <VBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 20;">
+    <AnchorPane layoutX="0" layoutY="0" prefHeight="70.0" prefWidth="900" style="-fx-background-color: #1a2a4a;">
+        <Label layoutX="30" layoutY="18" style="-fx-text-fill: white; -fx-font-size: 24px;                       -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
 
-            <Label fx:id="questionLabel" text="Loading question..."
-                   style="-fx-font-size: 15px; -fx-font-weight: bold;" wrapText="true" />
 
-            <RadioButton fx:id="option1" text="Option 1"/>
-            <RadioButton fx:id="option2" text="Option 2"/>
-            <RadioButton fx:id="option3" text="Option 3"/>
-            <RadioButton fx:id="option4" text="Option 4"/>
+        <Label fx:id="timerLabel" layoutX="503.0" layoutY="19.0" style="-fx-text-fill: #6a9ae7; -fx-font-size: 22px; -fx-font-weight: bold;" text="⏱ 00:00" />
 
-            <HBox spacing="20" alignment="CENTER_RIGHT">
-                <Button fx:id="nextBtn" text="Next" onAction="#handleNext"/>
-                <Button fx:id="submitBtn" text="Submit" onAction="#handleSubmit"/>
-            </HBox>
+        <Button fx:id="submitBtn" layoutX="780" layoutY="17.0" onAction="#handleSubmit" prefHeight="35" prefWidth="100" style="-fx-background-color: #27ae60; -fx-text-fill: white;                        -fx-font-size: 13px; -fx-background-radius: 8px; -fx-font-weight: bold;" text="✅ Submit" />
+    </AnchorPane>
 
-        </VBox>
-    </center>
 
-</BorderPane>
+    <Circle layoutX="778" layoutY="480.0" radius="160" style="-fx-fill: rgba(106,154,231,0.05);" />
+    <Circle layoutX="80" layoutY="530" radius="110" style="-fx-fill: rgba(106,154,231,0.04);" />
+
+
+    <AnchorPane layoutX="144.0" layoutY="98.0" prefHeight="150" prefWidth="800" style="-fx-background-color: white;                        -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 4);                        -fx-border-color: #dce8ff; -fx-border-radius: 16px; -fx-border-width: 1px;">
+
+
+        <Rectangle height="45" layoutX="0" layoutY="0" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);                           -fx-arc-width: 16; -fx-arc-height: 16;" width="800" />
+        <Rectangle height="15" layoutX="0" layoutY="30" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);" width="800" />
+
+        <Label alignment="CENTER" layoutX="0" layoutY="12" prefWidth="800" style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="❓ Question" />
+
+
+        <Label fx:id="questionLabel" layoutX="25" layoutY="58" prefHeight="80" prefWidth="750" style="-fx-text-fill: #1a2a4a; -fx-font-size: 15px;                       -fx-font-weight: bold; -fx-wrap-text: true;" text="Loading question..." />
+    </AnchorPane>
+
+
+    <AnchorPane layoutX="145.0" layoutY="258.0" prefHeight="260" prefWidth="800" style="-fx-background-color: white;                        -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 4);                        -fx-border-color: #dce8ff; -fx-border-radius: 16px; -fx-border-width: 1px;">
+
+        <Label layoutX="25" layoutY="18" style="-fx-text-fill: #4a6a9a; -fx-font-size: 12px; -fx-font-weight: bold;" text="Choose your answer:" />
+
+
+        <AnchorPane layoutX="20" layoutY="45" prefHeight="42" prefWidth="760" style="-fx-background-color: #f0f4ff; -fx-background-radius: 10px;                            -fx-border-color: #c0d0f0; -fx-border-radius: 10px; -fx-border-width: 1px;">
+            <Label layoutX="12" layoutY="12" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                           -fx-font-weight: bold; -fx-font-size: 11px;                           -fx-background-radius: 50%; -fx-padding: 2px 7px;" text="1" />
+            <RadioButton fx:id="option1" layoutX="42" layoutY="11" style="-fx-font-size: 13px; -fx-text-fill: #1a2a4a;" text="Option 1" />
+        </AnchorPane>
+
+
+        <AnchorPane layoutX="20" layoutY="95" prefHeight="42" prefWidth="760" style="-fx-background-color: #f0f4ff; -fx-background-radius: 10px;                            -fx-border-color: #c0d0f0; -fx-border-radius: 10px; -fx-border-width: 1px;">
+            <Label layoutX="12" layoutY="12" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                           -fx-font-weight: bold; -fx-font-size: 11px;                           -fx-background-radius: 50%; -fx-padding: 2px 7px;" text="2" />
+            <RadioButton fx:id="option2" layoutX="42" layoutY="11" style="-fx-font-size: 13px; -fx-text-fill: #1a2a4a;" text="Option 2" />
+        </AnchorPane>
+
+
+        <AnchorPane layoutX="20" layoutY="145" prefHeight="42" prefWidth="760" style="-fx-background-color: #f0f4ff; -fx-background-radius: 10px;                            -fx-border-color: #c0d0f0; -fx-border-radius: 10px; -fx-border-width: 1px;">
+            <Label layoutX="12" layoutY="12" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                           -fx-font-weight: bold; -fx-font-size: 11px;                           -fx-background-radius: 50%; -fx-padding: 2px 7px;" text="3" />
+            <RadioButton fx:id="option3" layoutX="42" layoutY="11" style="-fx-font-size: 13px; -fx-text-fill: #1a2a4a;" text="Option 3" />
+        </AnchorPane>
+
+
+        <AnchorPane layoutX="20" layoutY="195" prefHeight="42" prefWidth="760" style="-fx-background-color: #f0f4ff; -fx-background-radius: 10px;                            -fx-border-color: #c0d0f0; -fx-border-radius: 10px; -fx-border-width: 1px;">
+            <Label layoutX="12" layoutY="12" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                           -fx-font-weight: bold; -fx-font-size: 11px;                           -fx-background-radius: 50%; -fx-padding: 2px 7px;" text="4" />
+            <RadioButton fx:id="option4" layoutX="42" layoutY="11" style="-fx-font-size: 13px; -fx-text-fill: #1a2a4a;" text="Option 4" />
+        </AnchorPane>
+
+    </AnchorPane>
+
+
+    <Button fx:id="nextBtn" layoutX="802.0" layoutY="548.0" onAction="#handleNext" prefHeight="45" prefWidth="170" style="-fx-background-color: linear-gradient(to right, #1a2a4a, #2a5a9a);                    -fx-text-fill: white; -fx-font-size: 14px;                    -fx-font-weight: bold; -fx-background-radius: 12px;" text="Next Question ▶" />
+
+</AnchorPane>

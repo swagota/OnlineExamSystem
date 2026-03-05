@@ -29,7 +29,7 @@ public class ProfileController implements Initializable {
     private String fatherEmail;
     private String motherEmail;
     private int role;
-    private String returnTarget = "STUDENT"; // "STUDENT" or "TEACHER"
+    private String returnTarget = "STUDENT";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

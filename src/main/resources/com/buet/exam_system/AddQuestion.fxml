@@ -6,47 +6,63 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="620.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/25"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.buet.exam_system.AddQuestionController">
-   <children>
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f0f4ff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.AddQuestionController">
 
-      <!-- Exam info label at top -->
-      <Label fx:id="examInfoLabel" layoutX="14.0" layoutY="8.0"
-             style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #34495e;"
-             text="Add Question" />
 
-      <!-- Question text area -->
-      <TextArea fx:id="questionField" layoutY="30.0"
-                prefHeight="130.0" prefWidth="800.0"
-                promptText="Q1. Enter question here..." wrapText="true"/>
+   <AnchorPane layoutX="0" layoutY="0" prefHeight="70.0" prefWidth="900" style="-fx-background-color: #1a2a4a;">
+      <Label layoutX="30" layoutY="18" style="-fx-text-fill: white; -fx-font-size: 24px;                       -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
+      <Label layoutX="280" layoutY="22" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="Add Question" />
 
-      <!-- Options -->
-      <TextField fx:id="option1Field" layoutY="168.0" prefHeight="46.0" prefWidth="800.0" promptText="Option 1" />
-      <TextField fx:id="option2Field" layoutY="218.0" prefHeight="46.0" prefWidth="800.0" promptText="Option 2" />
-      <TextField fx:id="option3Field" layoutY="268.0" prefHeight="46.0" prefWidth="800.0" promptText="Option 3" />
-      <TextField fx:id="option4Field" layoutY="318.0" prefHeight="46.0" prefWidth="800.0" promptText="Option 4" />
 
-      <!-- Correct option selector -->
-      <ComboBox fx:id="correctBox" layoutX="1.0" layoutY="375.0"
-                prefHeight="42.0" prefWidth="220.0"
-                promptText="Select Correct Option" />
+      <Button fx:id="backBtn" layoutX="800" layoutY="17.0" onAction="#handleBack" prefHeight="35" prefWidth="80" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 13px; -fx-background-radius: 8px; -fx-font-weight: bold;" text="◀ Back" />
+   </AnchorPane>
 
-      <!-- Save button -->
-      <Button fx:id="saveBtn" layoutX="680.0" layoutY="385.0"
-              mnemonicParsing="false" onAction="#handleSave"
-              prefHeight="35.0" prefWidth="100.0" text="SAVE"
-              style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" />
 
-      <!-- Back button -->
-      <Button fx:id="BackBtn" layoutX="1.0" layoutY="580.0"
-              mnemonicParsing="false" onAction="#handleBack"
-              prefHeight="30.0" prefWidth="90.0" text="BACK" />
+   <Circle layoutX="820" layoutY="450" radius="160" style="-fx-fill: rgba(106,154,231,0.05);" />
+   <Circle layoutX="80" layoutY="500" radius="100" style="-fx-fill: rgba(106,154,231,0.04);" />
 
-   </children>
+
+   <AnchorPane layoutX="133.0" layoutY="94.0" prefHeight="490" prefWidth="800" style="-fx-background-color: white;                        -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 6);                        -fx-border-color: #dce8ff;                        -fx-border-radius: 16px;                        -fx-border-width: 1px;">
+
+
+      <Rectangle height="60" layoutX="0" layoutY="0" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);                           -fx-arc-width: 16; -fx-arc-height: 16;" width="800" />
+      <Rectangle height="16" layoutX="0" layoutY="44" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);" width="800" />
+
+      <Label alignment="CENTER" layoutX="0" layoutY="16" prefWidth="800" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="✏️  New Question" />
+
+
+      <Label layoutX="30" layoutY="78" style="-fx-text-fill: #1a2a4a; -fx-font-size: 13px; -fx-font-weight: bold;" text="Question" />
+      <TextArea fx:id="questionField" layoutX="30" layoutY="100" prefHeight="85" prefWidth="740" promptText="Enter your question here..." style="-fx-background-color: #f0f4ff;                          -fx-border-color: #c0d0f0; -fx-border-radius: 10px;                          -fx-background-radius: 10px; -fx-border-width: 1.5px;                          -fx-font-size: 13px; -fx-padding: 8px;" />
+
+
+      <Label layoutX="30" layoutY="198" style="-fx-text-fill: #1a2a4a; -fx-font-size: 13px; -fx-font-weight: bold;" text="Answer Options" />
+
+
+      <Label layoutX="32" layoutY="224" style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;                       -fx-background-color: #6a9ae7; -fx-background-radius: 50%;                       -fx-min-width: 22px; -fx-min-height: 22px;                       -fx-alignment: center; -fx-padding: 2px 6px;" text="1" />
+      <TextField fx:id="option1Field" layoutX="60" layoutY="218" prefHeight="36" prefWidth="710" promptText="Option 1" style="-fx-background-color: #f0f4ff; -fx-border-color: #c0d0f0;                           -fx-border-radius: 8px; -fx-background-radius: 8px;                           -fx-border-width: 1.5px; -fx-font-size: 13px; -fx-padding: 0 12px;" />
+
+
+      <Label layoutX="32" layoutY="264" style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;                       -fx-background-color: #6a9ae7; -fx-background-radius: 50%;                       -fx-min-width: 22px; -fx-min-height: 22px;                       -fx-alignment: center; -fx-padding: 2px 6px;" text="2" />
+      <TextField fx:id="option2Field" layoutX="60" layoutY="258" prefHeight="36" prefWidth="710" promptText="Option 2" style="-fx-background-color: #f0f4ff; -fx-border-color: #c0d0f0;                           -fx-border-radius: 8px; -fx-background-radius: 8px;                           -fx-border-width: 1.5px; -fx-font-size: 13px; -fx-padding: 0 12px;" />
+
+
+      <Label layoutX="32" layoutY="304" style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;                       -fx-background-color: #6a9ae7; -fx-background-radius: 50%;                       -fx-min-width: 22px; -fx-min-height: 22px;                       -fx-alignment: center; -fx-padding: 2px 6px;" text="3" />
+      <TextField fx:id="option3Field" layoutX="60" layoutY="298" prefHeight="36" prefWidth="710" promptText="Option 3" style="-fx-background-color: #f0f4ff; -fx-border-color: #c0d0f0;                           -fx-border-radius: 8px; -fx-background-radius: 8px;                           -fx-border-width: 1.5px; -fx-font-size: 13px; -fx-padding: 0 12px;" />
+
+
+      <Label layoutX="32" layoutY="344" style="-fx-text-fill: white; -fx-font-size: 11px; -fx-font-weight: bold;                       -fx-background-color: #6a9ae7; -fx-background-radius: 50%;                       -fx-min-width: 22px; -fx-min-height: 22px;                       -fx-alignment: center; -fx-padding: 2px 6px;" text="4" />
+      <TextField fx:id="option4Field" layoutX="60" layoutY="338" prefHeight="36" prefWidth="710" promptText="Option 4" style="-fx-background-color: #f0f4ff; -fx-border-color: #c0d0f0;                           -fx-border-radius: 8px; -fx-background-radius: 8px;                           -fx-border-width: 1.5px; -fx-font-size: 13px; -fx-padding: 0 12px;" />
+
+
+      <Label layoutX="30" layoutY="392" style="-fx-text-fill: #1a2a4a; -fx-font-size: 13px; -fx-font-weight: bold;" text="Correct Answer" />
+
+      <ComboBox fx:id="correctBox" layoutX="30" layoutY="414" prefHeight="42" prefWidth="220" promptText="Select correct option" style="-fx-background-color: #f0f4ff; -fx-border-color: #c0d0f0;                          -fx-border-radius: 8px; -fx-background-radius: 8px;                          -fx-font-size: 13px;" />
+
+      <Button fx:id="saveBtn" layoutX="570" layoutY="414" onAction="#handleSave" prefHeight="42" prefWidth="200" style="-fx-background-color: linear-gradient(to right, #1a2a4a, #2a5a9a);                        -fx-text-fill: white; -fx-font-size: 14px;                        -fx-font-weight: bold; -fx-background-radius: 10px;" text="💾   Save Question" />
+
+   </AnchorPane>
+
 </AnchorPane>
-
