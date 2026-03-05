@@ -14,37 +14,43 @@ public class CreateExamController {
     @FXML private TextField examNameField;
     @FXML private TextField totalTimeField;
     @FXML private Label teacherNameLabel;
+    @FXML private Button backBtn;
+    @FXML private Button createBtn;
 
-    private String teacherName = "Teacher"; // later login থেকে আনবে
+    private String teacherName        = "Teacher";
+    private String teacherEmail       = "";
+    private String teacherFatherEmail = "";
+    private String teacherMotherEmail = "";
 
     @FXML
     public void initialize() {
         teacherNameLabel.setText("By — " + teacherName + " Sir");
     }
 
-    public void setTeacherName(String name) {
-        this.teacherName = name;
+    public void setTeacherInfo(String name, String email, String fatherEmail, String motherEmail) {
+        this.teacherName        = name        != null ? name        : "Teacher";
+        this.teacherEmail       = email       != null ? email       : "";
+        this.teacherFatherEmail = fatherEmail != null ? fatherEmail : "";
+        this.teacherMotherEmail = motherEmail != null ? motherEmail : "";
         if (teacherNameLabel != null) {
             teacherNameLabel.setText("By — " + teacherName + " Sir");
         }
     }
 
     @FXML
-    private Button backBtn;
-
-    @FXML
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/TeacherDashboard.fxml"));
-
+                    getClass().getResource("/com/buet/exam_system/teacherDashboard.fxml"));
             Scene scene = new Scene(loader.load());
 
             TeacherDashboardController controller = loader.getController();
-            controller.setTeacherName(teacherName);
+            controller.setTeacherInfo(teacherName, teacherEmail,
+                    teacherFatherEmail, teacherMotherEmail);
 
             Stage stage = (Stage) backBtn.getScene().getWindow();
             stage.setScene(scene);
+            stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +59,6 @@ public class CreateExamController {
 
     @FXML
     private void handleCreate() {
-
         String examName = examNameField.getText().trim();
         String timeText = totalTimeField.getText().trim();
 
@@ -66,39 +71,34 @@ public class CreateExamController {
             return;
         }
 
-        try {
-            Connection connect = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/admin",
-                    "root",
-                    ""
-            );
+        try (Connection connect = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
 
-            String sql = "INSERT INTO exams (exam_name, total_time,total_marks, teacher_name) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO exams (exam_name, total_time, total_marks, teacher_name) VALUES (?,?,?,?)";
             PreparedStatement ps = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
             ps.setString(1, examName);
             ps.setInt(2, Integer.parseInt(timeText));
-            ps.setInt(3,0);
-            ps.setString(4,teacherName);
-
+            ps.setInt(3, 0);
+            ps.setString(4, teacherName);
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
-//            int newExamId=0;
             if (rs.next()) {
                 int examId = rs.getInt(1);
 
                 FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/buet/exam_system/AddQuestion.fxml")
-                );
-
+                        getClass().getResource("/com/buet/exam_system/AddQuestion.fxml"));
                 Parent root = loader.load();
 
                 AddQuestionController controller = loader.getController();
                 controller.setExamId(examId);
+                controller.setTeacherInfo(teacherName, teacherEmail,
+                        teacherFatherEmail, teacherMotherEmail);
+                controller.setTeacherName(teacherName);
 
                 Stage stage = (Stage) examNameField.getScene().getWindow();
                 stage.setScene(new Scene(root));
+                stage.centerOnScreen();
                 stage.show();
             }
 
@@ -106,5 +106,4 @@ public class CreateExamController {
             e.printStackTrace();
         }
     }
-
 }

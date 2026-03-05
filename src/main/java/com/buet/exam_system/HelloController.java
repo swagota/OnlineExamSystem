@@ -91,9 +91,6 @@ public class HelloController implements Initializable {
                     currentStage.show();
 
                 } else if (role == 2) {
-                    // STUDENT LOGIN — তোমার version
-                    login_btn.getScene().getWindow().hide();
-
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(
                             "/com/buet/exam_system/StudentDashboard.fxml"));
                     Parent root = loader.load();
@@ -106,11 +103,11 @@ public class HelloController implements Initializable {
                             result.getString("mother_email"),
                             role);
 
-                    Scene scene = new Scene(root);
-                    Stage stage = new Stage();
-                    stage.setScene(scene);
-                    stage.setTitle("Student Dashboard");
-                    stage.show();
+                    Stage currentStage = (Stage) login_btn.getScene().getWindow();
+                    currentStage.setScene(new Scene(root));
+                    currentStage.centerOnScreen();
+                    currentStage.setTitle("Student Dashboard");
+                    currentStage.show();
                 }
 
             } else {
