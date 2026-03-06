@@ -31,6 +31,7 @@ public class StudentDashboardController {
     @FXML private TableColumn resultScore;
     @FXML private TableColumn resultTotal;
     @FXML private TableColumn resultStatus;
+    @FXML private Label totalExamsLabel;
 
     @FXML private Button startBtn;
     @FXML private Button resultBtn;
@@ -61,9 +62,10 @@ public class StudentDashboardController {
 
         if (welcomeLabel != null) welcomeLabel.setText("WELCOME, " + currentUsername + "!");
         if (studentName  != null) studentName.setText(currentUsername);
+
+        loadTotalExams();
     }
 
-    /** Always fetch fresh from DB using username */
     private void loadEmailsFromDb(String username) {
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
@@ -79,6 +81,20 @@ public class StudentDashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadTotalExams() {
+        try (Connection connect = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
+            PreparedStatement ps = connect.prepareStatement(
+                    "SELECT COUNT(*) FROM exams");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                if (totalExamsLabel != null)
+                    totalExamsLabel.setText(String.valueOf(count));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML

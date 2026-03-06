@@ -54,7 +54,6 @@ public class ExamController implements Initializable {
         option4.setToggleGroup(optionsGroup);
     }
 
-    /** Keep old method for compatibility */
     public void setStudentUsername(String username) {
         this.studentUsername = username != null ? username : "";
     }

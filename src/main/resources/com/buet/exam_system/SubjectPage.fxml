@@ -11,14 +11,12 @@
 
     <AnchorPane layoutX="0" layoutY="0" prefHeight="70.0" prefWidth="900" style="-fx-background-color: #1a2a4a;">
         <Label layoutX="30" layoutY="18" style="-fx-text-fill: white; -fx-font-size: 24px;                       -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
-        <Label fx:id="pageTitleLabel" layoutX="260" layoutY="22" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="Available Exams" />
+        <Label fx:id="pageTitleLabel" layoutX="382.0" layoutY="22.0" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="Available Exams" />
         <Button fx:id="BackBtn" layoutX="800" layoutY="18.0" onAction="#handleBack" prefHeight="35" prefWidth="80" style="-fx-background-color: #6a9ae7; -fx-text-fill: white;                        -fx-font-size: 13px; -fx-background-radius: 8px; -fx-font-weight: bold;" text="◀ Back" />
     </AnchorPane>
-
-    <Circle layoutX="800" layoutY="480.0" radius="170" style="-fx-fill: rgba(106,154,231,0.05);" />
     <Circle layoutX="160.0" layoutY="520.0" radius="110" style="-fx-fill: rgba(106,154,231,0.04);" />
 
-    <AnchorPane layoutX="140.0" layoutY="160.0" prefHeight="415" prefWidth="800" style="-fx-background-color: white;                        -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 6);                        -fx-border-color: #dce8ff; -fx-border-radius: 16px; -fx-border-width: 1px;">
+    <AnchorPane layoutX="60.0" layoutY="141.0" prefHeight="415" prefWidth="800" style="-fx-background-color: white;                        -fx-background-radius: 16px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 6);                        -fx-border-color: #dce8ff; -fx-border-radius: 16px; -fx-border-width: 1px;">
 
         <Rectangle height="55" layoutX="0" layoutY="0" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);                           -fx-arc-width: 16; -fx-arc-height: 16;" width="800" />
         <Rectangle height="15" layoutX="0" layoutY="40" style="-fx-fill: linear-gradient(to right, #1a2a4a, #2a4a7a);" width="800" />
