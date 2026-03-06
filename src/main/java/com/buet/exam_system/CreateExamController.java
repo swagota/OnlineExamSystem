@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class CreateExamController {
@@ -81,6 +82,7 @@ public class CreateExamController {
             ps.setInt(3, 0);
             ps.setString(4, teacherName);
             ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Exam Created Successfully!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {

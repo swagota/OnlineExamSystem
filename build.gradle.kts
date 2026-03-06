@@ -62,6 +62,15 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.withType<JavaExec> {
+    jvmArgs = listOf(
+        "-Dprism.order=sw",
+        "-Dprism.lcdtext=false",
+        "-Dprism.text=t2k",
+        "-Djavafx.animation.fullspeed=true"
+    )
+}
+
 jlink {
     imageZip.set(layout.buildDirectory.file("/distributions/app-${javafx.platform.classifier}.zip"))
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))

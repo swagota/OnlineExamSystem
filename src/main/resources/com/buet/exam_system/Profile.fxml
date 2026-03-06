@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #0d1b2a;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.ProfileController">
 
 
-    <Rectangle height="251.0" layoutX="0.0" layoutY="0.0" style="-fx-fill: linear-gradient(to right, #1a2a4a, #6a9ae7);" width="950.0" />
+    <Rectangle height="242.0" style="-fx-fill: linear-gradient(to right, #1a2a4a, #6a9ae7);" width="950.0" />
 
 
     <Circle layoutX="820.0" layoutY="100.0" radius="130.0" style="-fx-fill: rgba(255,255,255,0.06);" />
@@ -19,19 +19,19 @@
     <Circle layoutX="50.0" layoutY="80.0" radius="50.0" style="-fx-fill: rgba(255,255,255,0.04);" />
 
 
-    <Label alignment="CENTER" layoutX="0.0" layoutY="15.0" prefWidth="900.0" style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
+    <Label alignment="CENTER" layoutX="25.0" layoutY="17.0" prefWidth="900.0" style="-fx-text-fill: white; -fx-font-size: 30px; -fx-font-weight: bold; -fx-font-family: 'Berlin Sans FB';" text="EXAMORA" />
 
 
-    <Label alignment="CENTER" layoutX="0.0" layoutY="55.0" prefWidth="900.0" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.75); -fx-font-style: italic;" text="My Profile" />
+    <Label alignment="CENTER" layoutX="20.0" layoutY="48.0" prefWidth="900.0" style="-fx-font-size: 15px; -fx-text-fill: rgba(255,255,255,0.75); -fx-font-style: italic;" text="My Profile" />
 
 
-    <Circle layoutX="443.0" layoutY="162.0" radius="85.0" style="-fx-fill: rgba(106,154,231,0.25);" />
-    <Circle layoutX="443.0" layoutY="162.0" radius="72.0" style="-fx-fill: rgba(106,154,231,0.4); -fx-stroke: rgba(255,255,255,0.6); -fx-stroke-width: 2;" />
-    <Circle layoutX="443.0" layoutY="162.0" radius="60.0" style="-fx-fill: #0d1b2a; -fx-stroke: white; -fx-stroke-width: 3;" />
-    <Label layoutX="415.0" layoutY="121.0" style="-fx-font-size: 55px;" text="👤" />
+    <Circle layoutX="470.0" layoutY="155.0" radius="85.0" style="-fx-fill: rgba(106,154,231,0.25);" />
+    <Circle layoutX="470.0" layoutY="155.0" radius="72.0" style="-fx-fill: rgba(106,154,231,0.4); -fx-stroke: rgba(255,255,255,0.6); -fx-stroke-width: 2;" />
+    <Circle layoutX="469.0" layoutY="155.0" radius="60.0" style="-fx-fill: #0d1b2a; -fx-stroke: white; -fx-stroke-width: 3;" />
+    <Label layoutX="441.0" layoutY="114.0" style="-fx-font-size: 55px;" text="👤" />
 
 
-    <AnchorPane layoutX="150.0" layoutY="260.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #162032;                        -fx-background-radius: 20px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 30, 0, 0, 10);                        -fx-border-color: rgba(106,154,231,0.25);                        -fx-border-radius: 20px;                        -fx-border-width: 1px;">
+    <AnchorPane layoutX="174.0" layoutY="242.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #162032;                        -fx-background-radius: 20px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 30, 0, 0, 10);                        -fx-border-color: rgba(106,154,231,0.25);                        -fx-border-radius: 20px;                        -fx-border-width: 1px;">
 
 
         <Label fx:id="profileName" alignment="CENTER" layoutX="0.0" layoutY="20.0" prefWidth="600.0" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white; -fx-font-family: 'Berlin Sans FB';" text="Student Name" />

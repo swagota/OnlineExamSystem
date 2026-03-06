@@ -1,5 +1,6 @@
 package com.buet.exam_system;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -144,9 +145,11 @@ public class HelloController implements Initializable {
         if (event.getSource() == login_acc) {
             signup_form.setVisible(false);
             login_form.setVisible(true);
+            Platform.runLater(() -> username.requestFocus());
         } else if (event.getSource() == create_acc) {
             signup_form.setVisible(true);
             login_form.setVisible(false);
+            Platform.runLater(() -> su_email.requestFocus());
         }
     }
 
