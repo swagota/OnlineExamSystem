@@ -20,7 +20,7 @@
    </AnchorPane>
 
 
-   <AnchorPane layoutX="0.0" layoutY="70.0" prefHeight="530.0" prefWidth="200.0" style="-fx-background-color: #1e3a5f;">
+   <AnchorPane layoutY="70.0" prefHeight="530.0" prefWidth="200.0" style="-fx-background-color: #1e3a5f;">
 
 
       <Label layoutX="75.0" layoutY="30.0" style="-fx-font-size: 50px;" text="👤" />
@@ -35,11 +35,11 @@
       <Button fx:id="profileBtn" layoutX="20.0" layoutY="160.0" onAction="#handleProfile" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="👤  Profile" />
 
 
-      <Button fx:id="startBtn" layoutX="20.0" layoutY="220.0" onAction="#handleStart" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7;                -fx-text-fill: white;                -fx-font-size: 14px;                -fx-background-radius: 8px;                -fx-cursor: hand;" text="📋  Start Exam" />
+      <Button fx:id="startBtn" layoutX="20.0" layoutY="220.0" onAction="#handleStart" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7;                -fx-text-fill: white;                -fx-font-size: 14px;                -fx-background-radius: 8px;                -fx-cursor: hand;" text="📝  Start Exam" />
 
 
-      <Button fx:id="resultBtn" layoutX="20.0" layoutY="280.0" onAction="#handleResult" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="📊  View Results" />
-      <Button fx:id="performanceBtn" layoutX="20.0" layoutY="342.0" onAction="#handleResult" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="📈 Performance" />
+      <Button fx:id="resultBtn" layoutX="20.0" layoutY="280.0" onAction="#handleResult" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="🏆  View Results" />
+      <Button fx:id="performanceBtn" layoutX="20.0" layoutY="342.0" onAction="#handlePerformance" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;" text="📈 Performance" />
 
    </AnchorPane>
    <AnchorPane layoutX="200.0" layoutY="70.0" prefHeight="530" prefWidth="700" style="-fx-background-color: #f0f4ff;">

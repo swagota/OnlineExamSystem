@@ -37,6 +37,7 @@ public class StudentDashboardController {
     @FXML private Button resultBtn;
     @FXML private Button logoutBtn;
     @FXML private Button profileBtn;
+    @FXML private Button performanceBtn;
 
     @FXML private Label welcomeLabel;
     @FXML private Label studentName;
@@ -146,6 +147,23 @@ public class StudentDashboardController {
             Parent root = loader.load();
             LeaderboardController lc = loader.getController();
             lc.setCallerInfo(false, currentUsername, currentEmail,
+                    currentFatherEmail, currentMotherEmail, currentRole);
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    @FXML
+    private void handlePerformance() {
+        try {
+            loadEmailsFromDb(currentUsername);
+            Stage stage = (Stage) performanceBtn.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/buet/exam_system/Performance.fxml"));
+            Parent root = loader.load();
+            PerformanceController pc = loader.getController();
+            pc.setStudentInfo(currentUsername, currentEmail,
                     currentFatherEmail, currentMotherEmail, currentRole);
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
