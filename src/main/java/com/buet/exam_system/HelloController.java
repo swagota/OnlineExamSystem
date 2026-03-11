@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
 
 import javax.swing.*;
 import java.net.URL;
@@ -46,6 +47,18 @@ public class HelloController implements Initializable {
     private Connection connect;
     private PreparedStatement statement;
     private ResultSet result;
+    private boolean isValidEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        return email != null && email.matches(regex);
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid Input");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     public Connection connectDb() {
         try {
@@ -120,21 +133,64 @@ public class HelloController implements Initializable {
     }
 
     public void signup(ActionEvent event) {
+
+        String usernameText = su_username.getText();
+        String passwordText = su_password.getText();
+        String emailText = su_email.getText();
+        String fatherEmailText = su_father_email.getText();
+        String motherEmailText = su_mother_email.getText();
+        String selectedRole = role_box.getValue();
+
+        if (usernameText.isEmpty() || passwordText.isEmpty() ||
+                emailText.isEmpty() || fatherEmailText.isEmpty() || motherEmailText.isEmpty()) {
+
+            showError("All fields must be filled!");
+            return;
+        }
+
+
+        if (!isValidEmail(emailText)) {
+            showError("Invalid student email address!");
+            return;
+        }
+
+        if (!isValidEmail(fatherEmailText)) {
+            showError("Invalid father email address!");
+            return;
+        }
+
+        if (!isValidEmail(motherEmailText)) {
+            showError("Invalid mother email address!");
+            return;
+        }
+
+        if (selectedRole == null) {
+            showError("Please select a role!");
+            return;
+        }
+
         connect = connectDb();
+
         try {
             String sql = "INSERT INTO data (username, password, email, role, father_email, mother_email) VALUES(?,?,?,?,?,?)";
             statement = connect.prepareStatement(sql);
-            statement.setString(1, su_username.getText());
-            statement.setString(2, su_password.getText());
-            statement.setString(3, su_email.getText());
-            String selectedRole = role_box.getValue();
+
+            statement.setString(1, usernameText);
+            statement.setString(2, passwordText);
+            statement.setString(3, emailText);
+
             int role = selectedRole.equals("Teacher") ? 1 : 2;
             statement.setInt(4, role);
-            statement.setString(5, su_father_email.getText());
-            statement.setString(6, su_mother_email.getText());
+
+            statement.setString(5, fatherEmailText);
+            statement.setString(6, motherEmailText);
+
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Successful Create new Account!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Successful Create new Account!",
+                    "Examora Message",
+                    JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
             e.printStackTrace();
