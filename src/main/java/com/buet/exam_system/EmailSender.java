@@ -11,16 +11,17 @@ public class EmailSender {
     public static void sendResultMail(String toEmail,
                                       String studentName,
                                       String examName,
-                                      int score,
+                                      double score,
                                       int total) {
-
+//        System.out.println("Email method called");
         if (toEmail == null || toEmail.isEmpty()) return;
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.port", "587");
+//        props.put("mail.debug", "true");
 
         Session session = Session.getInstance(props,
                 new Authenticator() {
@@ -49,7 +50,10 @@ public class EmailSender {
 
             message.setText(body);
 
-            Transport.send(message);
+            Transport transport = session.getTransport("smtp");
+            transport.connect("smtp.gmail.com", FROM_EMAIL, APP_PASSWORD);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
 
         } catch (Exception e) {
             e.printStackTrace();

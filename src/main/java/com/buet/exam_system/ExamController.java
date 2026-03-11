@@ -32,7 +32,7 @@ public class ExamController implements Initializable {
     private ToggleGroup optionsGroup;
     private List<Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
-    private int score = 0;
+    private double score = 0;
     private int totalSeconds = 0;
     private Timeline countdown;
     private int examId;
@@ -165,6 +165,9 @@ public class ExamController implements Initializable {
     @FXML private void handleSubmit() {
         checkAnswer();
         if (countdown != null) countdown.stop();
+        if (score < 0) {
+            score = 0;
+        }
         showResult();
     }
 
@@ -173,20 +176,23 @@ public class ExamController implements Initializable {
         RadioButton sel = (RadioButton) optionsGroup.getSelectedToggle();
         if (sel == null) return;
         int idx = sel == option1 ? 0 : sel == option2 ? 1 : sel == option3 ? 2 : 3;
-        if (idx == questions.get(currentQuestionIndex).getCorrectIndex()) score++;
+        if (idx == questions.get(currentQuestionIndex).getCorrectIndex()) {
+            score += 1;
+        } else {
+            score -= 0.25;
+        }
     }
 
     private void saveResultToDb() {
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
-            // Create table if not exists
             connect.createStatement().executeUpdate(
                     "CREATE TABLE IF NOT EXISTS results (" +
                             "id INT AUTO_INCREMENT PRIMARY KEY," +
                             "username VARCHAR(100)," +
                             "exam_id INT," +
                             "exam_name VARCHAR(200)," +
-                            "score INT," +
+                            "score DECIMAL(5,2)," +
                             "total INT," +
                             "submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
             );
@@ -195,15 +201,38 @@ public class ExamController implements Initializable {
             ps.setString(1, studentUsername);
             ps.setInt(2, examId);
             ps.setString(3, examName);
-            ps.setInt(4, score);
+            ps.setDouble(4, score);
             ps.setInt(5, questions.size());
             ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void showResult() {
+
+        //System.out.println("Father email: [" + studentFatherEmail + "]");
+        //System.out.println("Mother email: [" + studentMotherEmail + "]");
         saveResultToDb();
-        new Thread(() ->{
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/buet/exam_system/Result.fxml"));
+            Parent root = loader.load();
+            ResultController rc = loader.getController();
+
+            rc.setStudentInfo(studentUsername, studentEmail,
+                    studentFatherEmail, studentMotherEmail, studentRole);
+
+            rc.setResult(score, questions.size());
+
+            Stage stage = (Stage) submitBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen();
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Thread(() -> {
             EmailSender.sendResultMail(
                     studentFatherEmail,
                     studentUsername,
@@ -220,18 +249,5 @@ public class ExamController implements Initializable {
                     questions.size()
             );
         }).start();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com/buet/exam_system/Result.fxml"));
-            Parent root = loader.load();
-            ResultController rc = loader.getController();
-            rc.setStudentInfo(studentUsername, studentEmail,
-                    studentFatherEmail, studentMotherEmail, studentRole);
-            rc.setResult(score, questions.size());
-            Stage stage = (Stage) submitBtn.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
-            stage.show();
-        } catch (Exception e) { e.printStackTrace(); }
     }
 }

@@ -47,6 +47,10 @@ public class ViewQuestionsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/buet/exam_system/SubjectPage.fxml"));
             Parent root = loader.load();
+
+            SubjectPageController spc = loader.getController();
+            spc.setStudentMode(false, "");
+
             Stage stage = (Stage) backBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
@@ -130,7 +134,6 @@ public class ViewQuestionsController implements Initializable {
         );
         card.setPadding(new Insets(16, 20, 16, 20));
 
-
         HBox headerRow = new HBox(10);
         headerRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
@@ -143,16 +146,12 @@ public class ViewQuestionsController implements Initializable {
         questionLabel.setWrapText(true);
         questionLabel.setMaxWidth(560);
         HBox.setHgrow(questionLabel, Priority.ALWAYS);
-
-
         Button editBtn = new Button("✏ Edit");
         editBtn.setStyle(
                 "-fx-background-color:#6a9ae7;-fx-text-fill:white;-fx-font-size:12px;" +
                         "-fx-background-radius:8px;-fx-padding:5 14 5 14;-fx-cursor:hand;"
         );
         editBtn.setOnAction(e -> showEditDialog(qId, questionText, options, correctAnswer));
-
-
         Button deleteBtn = new Button("🗑");
         deleteBtn.setStyle(
                 "-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-size:12px;" +
@@ -168,14 +167,10 @@ public class ViewQuestionsController implements Initializable {
 
         headerRow.getChildren().addAll(badge, questionLabel, editBtn, deleteBtn);
         card.getChildren().add(headerRow);
-
-
         Label divider = new Label();
         divider.setPrefWidth(740);
         divider.setStyle("-fx-border-color:#eef2ff;-fx-border-width:1px 0 0 0;");
         card.getChildren().add(divider);
-
-
         String[] optLabels = {"A", "B", "C", "D"};
         for (int i = 0; i < options.length; i++) {
             boolean isCorrect = (i + 1) == correctAnswer;
@@ -203,7 +198,6 @@ public class ViewQuestionsController implements Initializable {
         }
         return card;
     }
-
 
     private void showEditDialog(int qId, String currentQuestion,
                                 String[] currentOptions, int currentCorrect) {
@@ -272,7 +266,6 @@ public class ViewQuestionsController implements Initializable {
         dialog.showAndWait();
     }
 
-
     private void showAddQuestionDialog() {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -335,7 +328,6 @@ public class ViewQuestionsController implements Initializable {
         dialog.showAndWait();
     }
 
-
     private void updateQuestion(int qId, String question,
                                 String o1, String o2, String o3, String o4, int correct) {
         try (Connection connect = DriverManager.getConnection(
@@ -366,7 +358,6 @@ public class ViewQuestionsController implements Initializable {
             ps.setString(5, o3); ps.setString(6, o4);
             ps.setInt(7, correct);
             ps.executeUpdate();
-
 
             PreparedStatement upd = connect.prepareStatement(
                     "UPDATE exams SET total_marks = total_marks + 1 WHERE id=?");

@@ -37,9 +37,9 @@ public class ResultController {
         this.studentRole        = role;
     }
 
-    public void setResult(int score, int total) {
+    public void setResult(double score, int total) {
         double pct   = total > 0 ? (score * 100.0 / total) : 0;
-        int    wrong = total - score;
+        double wrong = total - score;
         String emoji = pct >= 60 ? "🎉" : "📚";
 
         emojiLabel.setText(emoji);
@@ -57,8 +57,7 @@ public class ResultController {
                     "/com/buet/exam_system/SubjectPage.fxml"));
             Parent root = loader.load();
             SubjectPageController spc = loader.getController();
-            spc.setUserInfo(true, studentUsername, studentEmail,
-                    studentFatherEmail, studentMotherEmail, studentRole);
+            spc.setStudentMode(true, studentUsername);
             Stage stage = (Stage) backBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.centerOnScreen();

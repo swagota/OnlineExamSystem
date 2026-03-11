@@ -148,6 +148,10 @@ public class HelloController implements Initializable {
             return;
         }
 
+        if (passwordText.length() < 6) {
+            showError("Password must be at least 6 characters long!");
+            return;
+        }
 
         if (!isValidEmail(emailText)) {
             showError("Invalid student email address!");

@@ -93,7 +93,7 @@ public class LeaderboardController implements Initializable {
             while (rs.next()) {
                 hasResults = true;
                 String username  = rs.getString("username");
-                int    bestScore = rs.getInt("best_score");
+                double    bestScore = rs.getDouble("best_score");
                 int    total     = rs.getInt("total");
                 double pct       = total > 0 ? (bestScore * 100.0 / total) : 0;
                 leaderboardContainer.getChildren().add(
@@ -110,7 +110,7 @@ public class LeaderboardController implements Initializable {
     }
 
     private AnchorPane createRow(int rank, String username,
-                                 int score, int total, double pct) {
+                                 double score, int total, double pct) {
         AnchorPane row = new AnchorPane();
         row.setPrefWidth(798);
         row.setPrefHeight(56);
