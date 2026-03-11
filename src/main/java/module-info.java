@@ -11,6 +11,7 @@ module com.buet.exam_system {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.desktop;
+    requires jakarta.mail;
 
     opens com.buet.exam_system to javafx.fxml;
     exports com.buet.exam_system;

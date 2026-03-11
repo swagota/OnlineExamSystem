@@ -40,6 +40,8 @@ javafx {
 }
 
 dependencies {
+    implementation("com.sun.mail:jakarta.mail:2.0.1")
+    implementation("com.sun.activation:jakarta.activation:2.0.1")
     implementation(files("C:/Users/HP/Downloads/fontawesomefx-8.2.jar"))
     implementation(files("C:/Users/HP/Downloads/mysql-connector-java-5.1.48.jar"))
     implementation("org.controlsfx:controlsfx:11.2.1")

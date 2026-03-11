@@ -73,7 +73,7 @@ public class HelloController implements Initializable {
                 JOptionPane.showMessageDialog(null, "Successful login!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
                 if (role == 1) {
-                    // TEACHER LOGIN — partner এর version use করছি
+
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(
                             "/com/buet/exam_system/TeacherDashboard.fxml"));
                     Parent root = loader.load();

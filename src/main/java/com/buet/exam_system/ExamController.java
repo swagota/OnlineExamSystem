@@ -203,6 +203,23 @@ public class ExamController implements Initializable {
 
     private void showResult() {
         saveResultToDb();
+        new Thread(() ->{
+            EmailSender.sendResultMail(
+                    studentFatherEmail,
+                    studentUsername,
+                    examName,
+                    score,
+                    questions.size()
+            );
+
+            EmailSender.sendResultMail(
+                    studentMotherEmail,
+                    studentUsername,
+                    examName,
+                    score,
+                    questions.size()
+            );
+        }).start();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/com/buet/exam_system/Result.fxml"));
