@@ -13,7 +13,6 @@ public class EmailSender {
                                       String examName,
                                       double score,
                                       int total) {
-//        System.out.println("Email method called");
         if (toEmail == null || toEmail.isEmpty()) return;
 
         Properties props = new Properties();
@@ -21,7 +20,6 @@ public class EmailSender {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
-//        props.put("mail.debug", "true");
 
         Session session = Session.getInstance(props,
                 new Authenticator() {

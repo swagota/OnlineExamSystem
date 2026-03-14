@@ -49,7 +49,8 @@ public class ViewQuestionsController implements Initializable {
             Parent root = loader.load();
 
             SubjectPageController spc = loader.getController();
-            spc.setStudentMode(false, "");
+            spc.setUserInfo(false, teacherUsername, teacherEmail,
+                    teacherFatherEmail, teacherMotherEmail, 1);
 
             Stage stage = (Stage) backBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
