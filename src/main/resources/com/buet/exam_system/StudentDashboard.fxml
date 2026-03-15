@@ -32,14 +32,15 @@
       <Label layoutX="10.0" layoutY="130.0" prefWidth="180.0" style="-fx-text-fill: #6a9ae7;" text="-------------------------------------" />
 
 
-      <Button fx:id="profileBtn" layoutX="20.0" layoutY="160.0" onAction="#handleProfile" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="👤  Profile" />
+      <Button fx:id="profileBtn" layoutX="20.0" layoutY="342.0" onAction="#handleProfile" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="👤  Profile" />
 
 
-      <Button fx:id="startBtn" layoutX="20.0" layoutY="220.0" onAction="#handleStart" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7;                -fx-text-fill: white;                -fx-font-size: 14px;                -fx-background-radius: 8px;                -fx-cursor: hand;" text="📝  Start Exam" />
+      <Button fx:id="startBtn" layoutX="20.0" layoutY="161.0" onAction="#handleStart" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7;                -fx-text-fill: white;                -fx-font-size: 14px;                -fx-background-radius: 8px;                -fx-cursor: hand;" text="📝  Start Exam" />
 
 
-      <Button fx:id="resultBtn" layoutX="20.0" layoutY="280.0" onAction="#handleResult" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="🏆  View Results" />
-      <Button fx:id="performanceBtn" layoutX="20.0" layoutY="342.0" onAction="#handlePerformance" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;" text="📈 Performance" />
+      <Button fx:id="resultBtn" layoutX="20.0" layoutY="221.0" onAction="#handleResult" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand; -fx-border-color: #6a9ae7; -fx-border-radius: 8px;" text="🏆  View Results" />
+      <Button fx:id="performanceBtn" layoutX="20.0" layoutY="283.0" onAction="#handlePerformance" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;" text="📈 Performance" />
+      <Button fx:id="discussionBtn" layoutX="20.0" layoutY="401.0" onAction="#handleDiscussion" prefHeight="45.0" prefWidth="160.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;" text="💬 Discussion" />
 
    </AnchorPane>
    <AnchorPane layoutX="200.0" layoutY="70.0" prefHeight="530" prefWidth="700" style="-fx-background-color: #f0f4ff;">
@@ -53,23 +54,15 @@
             </children>
          </AnchorPane>
          <Label layoutX="0" layoutY="178" prefWidth="700" style="-fx-border-color: #c0c8e0; -fx-border-width: 1px 0 0 0;" text="" />
-         <Label layoutX="30" layoutY="195" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;" text="⚡ Quick Actions" />
-         <AnchorPane layoutX="30" layoutY="230" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
+         <Label layoutX="30.0" layoutY="187.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;" text="⚡ Quick Actions" />
+         <AnchorPane layoutX="30.0" layoutY="222.0" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
             <children>
                <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="📝" />
                <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="Start Exam" />
                <Label layoutX="15" layoutY="83" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="Start your desired exam" />
             </children>
          </AnchorPane>
-         <AnchorPane layoutX="240" layoutY="230" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
-            <children>
-               <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="📈" />
-               <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="Performance" />
-               <Label layoutX="15" layoutY="83" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="Track your" />
-               <Label layoutX="15" layoutY="99" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="daily performance" />
-            </children>
-         </AnchorPane>
-         <AnchorPane layoutX="450" layoutY="230" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
+         <AnchorPane layoutX="240.0" layoutY="222.0" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
             <children>
                <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="🏆" />
                <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="View Result" />
@@ -77,7 +70,29 @@
                <Label layoutX="15" layoutY="99" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="performance ranks" />
             </children>
          </AnchorPane>
-         <Label layoutX="0" layoutY="385" prefWidth="700" style="-fx-border-color: #c0c8e0; -fx-border-width: 1px 0 0 0;" text="" />
+         <AnchorPane layoutX="450.0" layoutY="222.0" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
+            <children>
+               <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="📈" />
+               <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="Performance" />
+               <Label layoutX="15" layoutY="83" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="Track your" />
+               <Label layoutX="15" layoutY="99" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="daily performance" />
+            </children>
+         </AnchorPane>
+         <AnchorPane layoutX="30.0" layoutY="376.0" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
+            <children>
+               <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="👤" />
+               <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="Profile" />
+               <Label layoutX="15" layoutY="83" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="Track your identity" />
+            </children>
+         </AnchorPane>
+         <AnchorPane layoutX="240.0" layoutY="376.0" prefHeight="140" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12px;                            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);                            -fx-border-color: #dce8ff; -fx-border-radius: 12px; -fx-border-width: 1px;">
+            <children>
+               <Label layoutX="15" layoutY="15" style="-fx-font-size: 34px;" text="💬" />
+               <Label layoutX="15" layoutY="62" style="-fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-font-weight: bold;" text="Discussion" />
+               <Label layoutX="15" layoutY="83" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="Ask your" />
+               <Label layoutX="15" layoutY="99" style="-fx-text-fill: #888; -fx-font-size: 11px;" text="confusions and questions" />
+            </children>
+         </AnchorPane>
       </children>
    </AnchorPane>
 

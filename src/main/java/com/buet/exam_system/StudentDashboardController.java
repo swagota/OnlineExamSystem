@@ -38,6 +38,7 @@ public class StudentDashboardController {
     @FXML private Button logoutBtn;
     @FXML private Button profileBtn;
     @FXML private Button performanceBtn;
+    @FXML private Button discussionBtn;
 
     @FXML private Label welcomeLabel;
     @FXML private Label studentName;
@@ -115,6 +116,23 @@ public class StudentDashboardController {
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
             stage.show();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+
+    @FXML
+    private void handleDiscussion() {
+        try {
+            loadEmailsFromDb(currentUsername);
+            Stage stage = (Stage) discussionBtn.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/com/buet/exam_system/Discussion.fxml"));
+            Parent root = loader.load();
+            DiscussionController dc = loader.getController();
+            dc.setUserInfo(currentUsername, currentEmail,
+                    currentFatherEmail, currentMotherEmail, currentRole);
+            stage.setScene(new Scene(root));
+            stage.centerOnScreen(); stage.show();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
