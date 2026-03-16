@@ -83,7 +83,7 @@ public class HelloController implements Initializable {
             if (result.next()) {
                 int role = result.getInt("role");
 
-                JOptionPane.showMessageDialog(null, "Successful login!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Successfully login!", "Examora Message", JOptionPane.INFORMATION_MESSAGE);
 
                 if (role == 1) {
 
@@ -192,7 +192,7 @@ public class HelloController implements Initializable {
             statement.execute();
 
             JOptionPane.showMessageDialog(null,
-                    "Successful Create new Account!",
+                    "Successfully Created !",
                     "Examora Message",
                     JOptionPane.INFORMATION_MESSAGE);
 

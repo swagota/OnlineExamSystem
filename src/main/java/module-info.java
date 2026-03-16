@@ -3,6 +3,7 @@ module com.buet.exam_system {
     requires javafx.fxml;
     requires javafx.web;
     requires java.sql;
+    requires java.net.http;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

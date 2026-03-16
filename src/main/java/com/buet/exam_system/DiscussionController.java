@@ -12,6 +12,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.sql.Statement;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+import javafx.application.Platform;
 
 import java.sql.*;
 
@@ -34,6 +40,7 @@ public class DiscussionController {
     private String currentMotherEmail = "";
     private int    currentRole        = 2;
     private boolean isTeacher         = false;
+    private static final String GEMINI_API_KEY = "put yours";
 
     public void setUserInfo(String username, String email,
                             String fatherEmail, String motherEmail, int role) {
@@ -53,8 +60,8 @@ public class DiscussionController {
             myQuestionsTitle.setManaged(false);
             myQuestionsScroll.setVisible(false);
             myQuestionsScroll.setManaged(false);
-            leftPanelTitle.setText("Student Questions");
-            leftPanelSubtitle.setText("Answer the questions below");
+            leftPanelTitle.setText("Student's Questions");
+            leftPanelSubtitle.setText("Answer the questions of student");
             roleLabel.setText("Logged in as: Teacher");
         } else {
             roleLabel.setText("Logged in as: Student");
@@ -62,6 +69,7 @@ public class DiscussionController {
 
         loadAllDiscussions();
         if (!isTeacher) loadMyQuestions();
+        checkOldUnansweredQuestions();
     }
 
     private void loadAllDiscussions() {
@@ -179,7 +187,7 @@ public class DiscussionController {
         if (answered) {
             VBox answerBox = new VBox(4);
             answerBox.setStyle("-fx-background-color: #e8f8f0; -fx-background-radius: 8px; -fx-padding: 10;");
-            Label answerTitle = new Label("Answer by " + (answeredBy != null ? answeredBy : "Teacher") + ":");
+            Label answerTitle = new Label("Answered by " + (answeredBy != null ? answeredBy : "Teacher") + ":");
             answerTitle.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
             Label answerText = new Label(answer);
             answerText.setWrapText(true);
@@ -206,6 +214,78 @@ public class DiscussionController {
         return card;
     }
 
+    private void checkAndReplyIfUnanswered(int questionId) {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
+            PreparedStatement ps = conn.prepareStatement(
+                    "SELECT question, answer FROM discussions WHERE id = ?");
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && (rs.getString("answer") == null || rs.getString("answer").isEmpty())) {
+                String aiAnswer = getGeminiAnswer(rs.getString("question"));
+                if (aiAnswer != null) saveAiAnswer(questionId, aiAnswer, conn);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private String getGeminiAnswer(String question) {
+        try {
+            String url = "https://api.groq.com/openai/v1/chat/completions";
+            String body = "{\"model\":\"llama-3.3-70b-versatile\",\"messages\":[{\"role\":\"user\",\"content\":\"" +
+                    question.replace("\"", "\\\"").replace("\n", "\\n") + "\"}]}";
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + GEMINI_API_KEY)
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String resp = response.body();
+            System.out.println("Groq Response: " + response.body());
+            int start = resp.indexOf("\"content\":\"") + 11;
+            int end = resp.indexOf("\"", start);
+            if (start > 11 && end > start) {
+                return resp.substring(start, end).replace("\\n", "\n");
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    private void saveAiAnswer(int id, String answer, Connection conn) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE discussions SET answer = ?, answered_by = ? WHERE id = ?");
+            ps.setString(1, answer);
+            ps.setString(2, "Groq AI");
+            ps.setInt(3, id);
+            ps.executeUpdate();
+            Platform.runLater(() -> loadAllDiscussions());
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void checkOldUnansweredQuestions() {
+        new Thread(() -> {
+            try (Connection conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/admin", "root", "")) {
+                PreparedStatement ps = conn.prepareStatement(
+                        "SELECT id, question FROM discussions " +
+                                "WHERE answer IS NULL AND created_at <= NOW() - INTERVAL 1 MINUTE");
+                ResultSet rs = ps.executeQuery();
+                //boolean found = false;
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String question = rs.getString("question");
+                    //System.out.println("Found unanswered: " + id + " - " + question);
+                    String aiAnswer = getGeminiAnswer(question);
+                    //System.out.println("Gemini said: " + aiAnswer);
+                    if (aiAnswer != null) saveAiAnswer(id, aiAnswer, conn);
+                }
+                //if (!found) System.out.println("No old unanswered questions found");
+            } catch (Exception e) { e.printStackTrace(); }
+        }).start();
+    }
+
     @FXML
     private void handleSubmit() {
         String text = questionInput.getText().trim();
@@ -216,11 +296,22 @@ public class DiscussionController {
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO discussions (username, role, question) VALUES (?, ?, ?)");
+                    "INSERT INTO discussions (username, role, question) VALUES (?, ?, ?)",
+            Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, currentUsername);
             ps.setInt(2, currentRole);
             ps.setString(3, text);
             ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            int questionId = 0;
+            if (generatedKeys.next()) questionId = generatedKeys.getInt(1);
+            final int finalId = questionId;
+            new Thread(() -> {
+                try {
+                    Thread.sleep( 60 * 1000);
+                    checkAndReplyIfUnanswered(finalId);
+                } catch (InterruptedException e) { e.printStackTrace(); }
+            }).start();
             questionInput.clear();
             loadAllDiscussions();
             loadMyQuestions();
