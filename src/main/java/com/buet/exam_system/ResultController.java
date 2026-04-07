@@ -45,9 +45,11 @@ public class ResultController {
         emojiLabel.setText(emoji);
         scoreLabel.setText(score + " / " + total);
         percentLabel.setText(String.format("%.1f%%  correct", pct));
-        correctLabel.setText(String.valueOf(score));
-        wrongLabel.setText(String.valueOf(wrong));
+        correctLabel.setText(String.valueOf(total-(wrong/1.25)));
+        wrongLabel.setText(String.valueOf(wrong/1.25));
         totalLabel.setText(String.valueOf(total));
+
+        //System.out.println(score);
     }
 
     @FXML

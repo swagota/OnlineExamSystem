@@ -6,18 +6,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import java.sql.Statement;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
-import javafx.application.Platform;
 
 import java.sql.*;
 
@@ -25,6 +16,9 @@ public class DiscussionController {
 
     @FXML private Button backBtn;
     @FXML private Button submitBtn;
+    @FXML private Button searchBtn;
+    @FXML private Button clearBtn;
+    @FXML private TextField searchField;
     @FXML private TextArea questionInput;
     @FXML private VBox myQuestionsBox;
     @FXML private VBox allDiscussionsBox;
@@ -40,7 +34,6 @@ public class DiscussionController {
     private String currentMotherEmail = "";
     private int    currentRole        = 2;
     private boolean isTeacher         = false;
-    private static final String GEMINI_API_KEY = "put yours";
 
     public void setUserInfo(String username, String email,
                             String fatherEmail, String motherEmail, int role) {
@@ -61,38 +54,62 @@ public class DiscussionController {
             myQuestionsScroll.setVisible(false);
             myQuestionsScroll.setManaged(false);
             leftPanelTitle.setText("Student's Questions");
-            leftPanelSubtitle.setText("Answer the questions of student");
-            roleLabel.setText("Logged in as: Teacher");
+            leftPanelSubtitle.setText("Answer the questions of students");
+            //roleLabel.setText("Logged in as: Teacher");
         } else {
-            roleLabel.setText("Logged in as: Student");
+           // roleLabel.setText("Logged in as: Student");
         }
 
-        loadAllDiscussions();
+        loadAllDiscussions("");
         if (!isTeacher) loadMyQuestions();
-        checkOldUnansweredQuestions();
     }
 
-    private void loadAllDiscussions() {
+
+    @FXML
+    private void handleSearch() {
+        String query = searchField.getText().trim();
+        loadAllDiscussions(query);
+    }
+
+    @FXML
+    private void handleClearSearch() {
+        searchField.clear();
+        loadAllDiscussions("");
+    }
+
+    private void loadAllDiscussions(String searchQuery) {
         allDiscussionsBox.getChildren().clear();
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT * FROM discussions ORDER BY created_at DESC");
+
+            String sql;
+            PreparedStatement ps;
+
+            if (searchQuery == null || searchQuery.isBlank()) {
+                sql = "SELECT * FROM discussions ORDER BY created_at DESC";
+                ps = conn.prepareStatement(sql);
+            } else {
+                sql = "SELECT * FROM discussions WHERE question LIKE ? ORDER BY created_at DESC";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, "%" + searchQuery + "%");
+            }
+
             ResultSet rs = ps.executeQuery();
             boolean any = false;
             while (rs.next()) {
                 any = true;
-                int    id         = rs.getInt("id");
-                String asker      = rs.getString("username");
-                String question   = rs.getString("question");
-                String answer     = rs.getString("answer");
-                String answeredBy = rs.getString("answered_by");
-                String createdAt  = rs.getString("created_at").substring(0, 16);
+                int    id        = rs.getInt("id");
+                String asker     = rs.getString("username");
+                String question  = rs.getString("question");
+                String createdAt = rs.getString("created_at").substring(0, 16);
                 allDiscussionsBox.getChildren().add(
-                        createDiscussionCard(id, asker, question, answer, answeredBy, createdAt));
+                        createDiscussionCard(id, asker, question, createdAt));
             }
             if (!any) {
-                Label empty = new Label("No questions yet. Be the first to ask!");
+                String msg = searchQuery.isBlank()
+                        ? "No questions yet. Be the first to ask!"
+                        : "No questions found for \"" + searchQuery + "\"";
+                Label empty = new Label(msg);
                 empty.setStyle("-fx-text-fill: #aaa; -fx-font-size: 13px; -fx-font-style: italic; -fx-padding: 20px;");
                 allDiscussionsBox.getChildren().add(empty);
             }
@@ -103,16 +120,22 @@ public class DiscussionController {
         myQuestionsBox.getChildren().clear();
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
+
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT id, question, answer FROM discussions WHERE username = ? ORDER BY created_at DESC");
+                    "SELECT d.id, d.question, COUNT(r.id) as reply_count " +
+                            "FROM discussions d " +
+                            "LEFT JOIN discussion_replies r ON d.id = r.discussion_id " +
+                            "WHERE d.username = ? " +
+                            "GROUP BY d.id, d.question " +
+                            "ORDER BY d.created_at DESC");
             ps.setString(1, currentUsername);
             ResultSet rs = ps.executeQuery();
             boolean any = false;
             while (rs.next()) {
                 any = true;
                 String q         = rs.getString("question");
-                String ans       = rs.getString("answer");
-                boolean answered = ans != null && !ans.isEmpty();
+                int replyCount   = rs.getInt("reply_count");
+                boolean answered = replyCount > 0;
 
                 AnchorPane mini = new AnchorPane();
                 mini.setPrefWidth(240);
@@ -127,7 +150,8 @@ public class DiscussionController {
                 qLabel.setWrapText(true);
                 qLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #1a2a4a; -fx-font-weight: bold;");
 
-                Label statusLabel = new Label(answered ? "Answered" : "Pending");
+                String status = answered ? replyCount + " reply" : "Pending";
+                Label statusLabel = new Label(status);
                 statusLabel.setLayoutX(8); statusLabel.setLayoutY(38);
                 statusLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: " +
                         (answered ? "#27ae60" : "#e67e22") + "; -fx-font-weight: bold;");
@@ -143,15 +167,18 @@ public class DiscussionController {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private VBox createDiscussionCard(int id, String asker, String question,
-                                      String answer, String answeredBy, String createdAt) {
+    private VBox createDiscussionCard(int id, String asker,
+                                      String question, String createdAt) {
         VBox card = new VBox(8);
         card.setPrefWidth(580);
         card.setPadding(new Insets(14, 16, 14, 16));
-        boolean answered = answer != null && !answer.isEmpty();
-        card.setStyle("-fx-background-color: " + (answered ? "#f0fff8" : "white") +
+
+        int replyCount   = getReplyCount(id);
+        boolean hasReplies = replyCount > 0;
+
+        card.setStyle("-fx-background-color: " + (hasReplies ? "#f0fff8" : "white") +
                 "; -fx-background-radius: 12px; -fx-border-color: " +
-                (answered ? "#a8e6c0" : "#dce8ff") +
+                (hasReplies ? "#a8e6c0" : "#dce8ff") +
                 "; -fx-border-radius: 12px; -fx-border-width: 1px;" +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 8, 0, 0, 2);");
 
@@ -160,8 +187,9 @@ public class DiscussionController {
 
         Label avatarLabel = new Label(asker.substring(0, 1).toUpperCase());
         avatarLabel.setPrefWidth(32); avatarLabel.setPrefHeight(32);
-        avatarLabel.setStyle("-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-weight: bold;" +
-                "-fx-font-size: 14px; -fx-background-radius: 50%; -fx-alignment: center;");
+        avatarLabel.setStyle("-fx-background-color: #6a9ae7; -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-font-size: 14px;" +
+                "-fx-background-radius: 50%; -fx-alignment: center;");
 
         Label nameLabel = new Label(asker);
         nameLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;");
@@ -170,8 +198,10 @@ public class DiscussionController {
         Label timeLabel = new Label(createdAt);
         timeLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #aaa;");
 
-        Label statusBadge = new Label(answered ? "Answered" : "Unanswered");
-        statusBadge.setStyle("-fx-background-color: " + (answered ? "#27ae60" : "#e67e22") +
+        String badgeText = hasReplies ? replyCount + " Replies" : "No Replies";
+        String badgeBg   = hasReplies ? "#27ae60" : "#e67e22";
+        Label statusBadge = new Label(badgeText);
+        statusBadge.setStyle("-fx-background-color: " + badgeBg +
                 "; -fx-text-fill: white; -fx-font-size: 10px; -fx-font-weight: bold;" +
                 "-fx-background-radius: 10px; -fx-padding: 2 8 2 8;");
 
@@ -184,106 +214,67 @@ public class DiscussionController {
 
         card.getChildren().addAll(header, qLabel);
 
-        if (answered) {
-            VBox answerBox = new VBox(4);
-            answerBox.setStyle("-fx-background-color: #e8f8f0; -fx-background-radius: 8px; -fx-padding: 10;");
-            Label answerTitle = new Label("Answered by " + (answeredBy != null ? answeredBy : "Teacher") + ":");
-            answerTitle.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #27ae60;");
-            Label answerText = new Label(answer);
-            answerText.setWrapText(true);
-            answerText.setMaxWidth(535);
-            answerText.setStyle("-fx-font-size: 13px; -fx-text-fill: #1a2a4a;");
-            answerBox.getChildren().addAll(answerTitle, answerText);
-            card.getChildren().add(answerBox);
-        }
+        loadReplies(id, card);
 
-        if (isTeacher && !answered) {
-            Button answerBtn = new Button("Answer this question");
-            answerBtn.setStyle("-fx-background-color: #1a2a4a; -fx-text-fill: white; -fx-font-size: 12px;" +
-                    "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;");
-            answerBtn.setOnMouseEntered(e -> answerBtn.setStyle(
-                    "-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 12px;" +
-                            "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;"));
-            answerBtn.setOnMouseExited(e -> answerBtn.setStyle(
-                    "-fx-background-color: #1a2a4a; -fx-text-fill: white; -fx-font-size: 12px;" +
-                            "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;"));
-            answerBtn.setOnAction(e -> showAnswerDialog(id));
-            card.getChildren().add(answerBtn);
-        }
+        Button replyBtn = new Button("Reply");
+        replyBtn.setStyle("-fx-background-color: #1a2a4a; -fx-text-fill: white; -fx-font-size: 12px;" +
+                "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;");
+        replyBtn.setOnMouseEntered(e -> replyBtn.setStyle(
+                "-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 12px;" +
+                        "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;"));
+        replyBtn.setOnMouseExited(e -> replyBtn.setStyle(
+                "-fx-background-color: #1a2a4a; -fx-text-fill: white; -fx-font-size: 12px;" +
+                        "-fx-background-radius: 8px; -fx-padding: 6 16 6 16; -fx-cursor: hand;"));
+        replyBtn.setOnAction(e -> showReplyDialog(id));
+        card.getChildren().add(replyBtn);
 
         return card;
     }
 
-    private void checkAndReplyIfUnanswered(int questionId) {
+    private void loadReplies(int discussionId, VBox card) {
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT question, answer FROM discussions WHERE id = ?");
-            ps.setInt(1, questionId);
+                    "SELECT username, role, reply, created_at FROM discussion_replies " +
+                            "WHERE discussion_id = ? ORDER BY created_at ASC");
+            ps.setInt(1, discussionId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next() && (rs.getString("answer") == null || rs.getString("answer").isEmpty())) {
-                String aiAnswer = getGeminiAnswer(rs.getString("question"));
-                if (aiAnswer != null) saveAiAnswer(questionId, aiAnswer, conn);
+            while (rs.next()) {
+                String replier   = rs.getString("username");
+                int    role      = rs.getInt("role");
+                String replyText = rs.getString("reply");
+                String time      = rs.getString("created_at").substring(0, 16);
+                boolean isT      = (role == 1);
+
+                VBox replyBox = new VBox(4);
+                replyBox.setStyle("-fx-background-color: " + (isT ? "#e8f8f0" : "#eef4ff") +
+                        "; -fx-background-radius: 8px; -fx-padding: 8;");
+
+                String roleColor = isT ? "#27ae60" : "#6a9ae7";
+                Label replyHeader = new Label(replier + "  [" + (isT ? "Teacher" : "Student") + "]  " + time);
+                replyHeader.setStyle("-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: " + roleColor + ";");
+
+                Label replyLabel = new Label(replyText);
+                replyLabel.setWrapText(true);
+                replyLabel.setMaxWidth(530);
+                replyLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #1a2a4a;");
+
+                replyBox.getChildren().addAll(replyHeader, replyLabel);
+                card.getChildren().add(replyBox);
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private String getGeminiAnswer(String question) {
-        try {
-            String url = "https://api.groq.com/openai/v1/chat/completions";
-            String body = "{\"model\":\"llama-3.3-70b-versatile\",\"messages\":[{\"role\":\"user\",\"content\":\"" +
-                    question.replace("\"", "\\\"").replace("\n", "\\n") + "\"}]}";
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + GEMINI_API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String resp = response.body();
-            System.out.println("Groq Response: " + response.body());
-            int start = resp.indexOf("\"content\":\"") + 11;
-            int end = resp.indexOf("\"", start);
-            if (start > 11 && end > start) {
-                return resp.substring(start, end).replace("\\n", "\n");
-            }
-        } catch (Exception e) { e.printStackTrace(); }
-        return null;
-    }
-
-    private void saveAiAnswer(int id, String answer, Connection conn) {
-        try {
+    private int getReplyCount(int discussionId) {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE discussions SET answer = ?, answered_by = ? WHERE id = ?");
-            ps.setString(1, answer);
-            ps.setString(2, "Groq AI");
-            ps.setInt(3, id);
-            ps.executeUpdate();
-            Platform.runLater(() -> loadAllDiscussions());
+                    "SELECT COUNT(*) FROM discussion_replies WHERE discussion_id = ?");
+            ps.setInt(1, discussionId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
         } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void checkOldUnansweredQuestions() {
-        new Thread(() -> {
-            try (Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/admin", "root", "")) {
-                PreparedStatement ps = conn.prepareStatement(
-                        "SELECT id, question FROM discussions " +
-                                "WHERE answer IS NULL AND created_at <= NOW() - INTERVAL 1 MINUTE");
-                ResultSet rs = ps.executeQuery();
-                //boolean found = false;
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String question = rs.getString("question");
-                    //System.out.println("Found unanswered: " + id + " - " + question);
-                    String aiAnswer = getGeminiAnswer(question);
-                    //System.out.println("Gemini said: " + aiAnswer);
-                    if (aiAnswer != null) saveAiAnswer(id, aiAnswer, conn);
-                }
-                //if (!found) System.out.println("No old unanswered questions found");
-            } catch (Exception e) { e.printStackTrace(); }
-        }).start();
+        return 0;
     }
 
     @FXML
@@ -296,83 +287,74 @@ public class DiscussionController {
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO discussions (username, role, question) VALUES (?, ?, ?)",
-            Statement.RETURN_GENERATED_KEYS);
+                    "INSERT INTO discussions (username, role, question) VALUES (?, ?, ?)");
             ps.setString(1, currentUsername);
             ps.setInt(2, currentRole);
             ps.setString(3, text);
             ps.executeUpdate();
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            int questionId = 0;
-            if (generatedKeys.next()) questionId = generatedKeys.getInt(1);
-            final int finalId = questionId;
-            new Thread(() -> {
-                try {
-                    Thread.sleep( 60 * 1000);
-                    checkAndReplyIfUnanswered(finalId);
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            }).start();
             questionInput.clear();
-            loadAllDiscussions();
+            loadAllDiscussions(searchField.getText().trim());
             loadMyQuestions();
             new Alert(Alert.AlertType.INFORMATION, "Question submitted successfully!").showAndWait();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private void showAnswerDialog(int discussionId) {
+    private void showReplyDialog(int discussionId) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Answer Question");
+        dialog.setTitle("Reply");
 
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color: #f0f4ff;");
         root.setPrefWidth(500);
 
-        Label title = new Label("Write your answer:");
+        Label title = new Label("Write your reply:");
         title.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;");
 
-        TextArea answerField = new TextArea();
-        answerField.setPromptText("Type your answer here...");
-        answerField.setPrefRowCount(5);
-        answerField.setWrapText(true);
+        TextArea replyField = new TextArea();
+        replyField.setPromptText("Type your reply here...");
+        replyField.setPrefRowCount(5);
+        replyField.setWrapText(true);
 
         HBox btnRow = new HBox(10);
-        Button saveBtn = new Button("Submit Answer");
-        saveBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" +
-                "-fx-background-radius: 8px; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
+        Button saveBtn = new Button("Submit Reply");
+        saveBtn.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;" +
+                "-fx-font-weight: bold; -fx-background-radius: 8px; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setStyle("-fx-background-color: #bbb; -fx-text-fill: white;" +
                 "-fx-background-radius: 8px; -fx-padding: 8 20 8 20; -fx-cursor: hand;");
         cancelBtn.setOnAction(e -> dialog.close());
 
         saveBtn.setOnAction(e -> {
-            String ans = answerField.getText().trim();
-            if (ans.isEmpty()) {
-                new Alert(Alert.AlertType.WARNING, "Please write an answer!").showAndWait();
+            String reply = replyField.getText().trim();
+            if (reply.isEmpty()) {
+                new Alert(Alert.AlertType.WARNING, "Please write a reply!").showAndWait();
                 return;
             }
-            saveAnswer(discussionId, ans);
+            saveReply(discussionId, reply);
             dialog.close();
         });
 
         btnRow.getChildren().addAll(saveBtn, cancelBtn);
-        root.getChildren().addAll(title, answerField, btnRow);
+        root.getChildren().addAll(title, replyField, btnRow);
         dialog.setScene(new Scene(root));
         dialog.showAndWait();
     }
 
-    private void saveAnswer(int id, String answer) {
+    private void saveReply(int discussionId, String reply) {
         try (Connection conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = conn.prepareStatement(
-                    "UPDATE discussions SET answer = ?, answered_by = ? WHERE id = ?");
-            ps.setString(1, answer);
+                    "INSERT INTO discussion_replies (discussion_id, username, role, reply) VALUES (?, ?, ?, ?)");
+            ps.setInt(1, discussionId);
             ps.setString(2, currentUsername);
-            ps.setInt(3, id);
+            ps.setInt(3, currentRole);
+            ps.setString(4, reply);
             ps.executeUpdate();
-            loadAllDiscussions();
-            new Alert(Alert.AlertType.INFORMATION, "Answer submitted successfully!").showAndWait();
+            loadAllDiscussions(searchField.getText().trim());
+            if (!isTeacher) loadMyQuestions();
+            new Alert(Alert.AlertType.INFORMATION, "Reply submitted!").showAndWait();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -384,7 +366,7 @@ public class DiscussionController {
             Parent root;
             if (isTeacher) {
                 loader = new FXMLLoader(getClass().getResource(
-                        "/com/buet/exam_system/teacherDashboard.fxml"));
+                        "/com/buet/exam_system/TeacherDashboard.fxml"));
                 root = loader.load();
                 TeacherDashboardController tc = loader.getController();
                 tc.setTeacherInfo(currentUsername, currentEmail,
