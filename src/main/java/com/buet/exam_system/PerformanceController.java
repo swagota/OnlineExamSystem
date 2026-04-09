@@ -174,7 +174,7 @@ public class PerformanceController {
                 double pct      = total > 0 ? score * 100.0 / total : 0;
                 boolean passed  = pct >= 50;
 
-                // Build result row
+
                 AnchorPane row = new AnchorPane();
                 row.setPrefHeight(40);
                 row.setPrefWidth(280);

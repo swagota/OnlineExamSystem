@@ -31,10 +31,24 @@ public class TeacherDashboardController implements Initializable {
     private String currentMotherEmail = "";
     private final int currentRole     = 1;
 
+    private static final String BTN_NORMAL = "-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;";
+    private static final String BTN_HOVER  = "-fx-background-color: white; -fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;";
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (logoutBtn  != null) logoutBtn.setOnAction(e -> handleLogout());
         if (profileBtn != null) profileBtn.setOnAction(e -> handleProfile());
+        applyHoverEffects();
+    }
+
+    private void applyHoverEffects() {
+        for (Button btn : new Button[]{addQuestionBtn, availableExamBtn, leaderboardBtn, profileBtn, discussionBtn}) {
+            if (btn != null) {
+                btn.setStyle(BTN_NORMAL);
+                btn.setOnMouseEntered(e -> btn.setStyle(BTN_HOVER));
+                btn.setOnMouseExited(e  -> btn.setStyle(BTN_NORMAL));
+            }
+        }
     }
 
     public void setTeacherInfo(String username, String email,

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f0f4ff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.ResultReviewController">
+
+    <!-- Top Bar -->
+    <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="70.0" prefWidth="900" style="-fx-background-color: #1a2a4a;">
+        <Label layoutX="30.0" layoutY="18.0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" text="EXAMORA" />
+        <Label fx:id="titleLabel" layoutX="280.0" layoutY="22.0" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="Answer Review" />
+        <Button fx:id="backBtn" layoutX="800" layoutY="17.0" onAction="#handleBack" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8px; -fx-cursor: hand;" text="HOME" />
+    </AnchorPane>
+
+    <!-- Score summary bar -->
+    <AnchorPane layoutX="20.0" layoutY="85.0" prefHeight="50.0" prefWidth="860.0" style="-fx-background-color: white; -fx-background-radius: 10px;                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);                        -fx-border-color: #dce8ff; -fx-border-radius: 10px; -fx-border-width: 1px;">
+        <Label fx:id="scoreLabel" layoutX="20.0" layoutY="14.0" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;" text="Score: --/--" />
+    </AnchorPane>
+
+    <!-- Questions scroll area -->
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutX="20.0" layoutY="145.0" prefHeight="440.0" prefWidth="860.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <VBox fx:id="questionsContainer" spacing="12.0" style="-fx-background-color: transparent; -fx-padding: 5;" />
+    </ScrollPane>
 
 </AnchorPane>

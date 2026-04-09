@@ -3,6 +3,7 @@ package com.buet.exam_system;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -23,10 +24,12 @@ public class AddQuestionController implements Initializable {
     @FXML private Label examInfoLabel;
 
     private int examId;
-    private String teacherName;
+    private String teacherName        = "";
     private String teacherEmail       = "";
     private String teacherFatherEmail = "";
     private String teacherMotherEmail = "";
+
+    private int editQuestionId = -1;
 
     public void setTeacherInfo(String name, String email,
                                String fatherEmail, String motherEmail) {
@@ -34,6 +37,10 @@ public class AddQuestionController implements Initializable {
         this.teacherEmail       = email       != null ? email       : "";
         this.teacherFatherEmail = fatherEmail != null ? fatherEmail : "";
         this.teacherMotherEmail = motherEmail != null ? motherEmail : "";
+    }
+
+    public void setTeacherName(String name) {
+        this.teacherName = name != null ? name : "";
     }
 
     @Override
@@ -46,8 +53,17 @@ public class AddQuestionController implements Initializable {
         updatePromptText();
     }
 
-    public void setTeacherName(String name) {
-        this.teacherName = name;
+    public void setEditMode(int qId, String question, String[] options, int correct) {
+        this.editQuestionId = qId;
+        questionField.setText(question);
+        option1Field.setText(options[0]);
+        option2Field.setText(options[1]);
+        option3Field.setText(options[2]);
+        option4Field.setText(options[3]);
+        correctBox.setValue(String.valueOf(correct));
+        if (examInfoLabel != null) {
+            examInfoLabel.setText("Editing Question");
+        }
     }
 
     private void updatePromptText() {
@@ -58,8 +74,8 @@ public class AddQuestionController implements Initializable {
     private int getNextQuestionNumber() {
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
-            String sql = "SELECT COUNT(*) FROM questions WHERE exam_id = ?";
-            PreparedStatement ps = connect.prepareStatement(sql);
+            PreparedStatement ps = connect.prepareStatement(
+                    "SELECT COUNT(*) FROM questions WHERE exam_id = ?");
             ps.setInt(1, examId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt(1) + 1;
@@ -72,17 +88,32 @@ public class AddQuestionController implements Initializable {
     @FXML
     private void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/buet/exam_system/teacherDashboard.fxml"));
-            Scene scene = new Scene(loader.load());
+            if (editQuestionId != -1) {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/buet/exam_system/ViewQuestions.fxml"));
+                Parent root = loader.load();
 
-            TeacherDashboardController controller = loader.getController();
-            controller.setTeacherInfo(teacherName,teacherEmail,
-                    teacherFatherEmail, teacherMotherEmail);
+                ViewQuestionsController controller = loader.getController();
+                controller.setTeacherInfo(teacherName, teacherEmail,
+                        teacherFatherEmail, teacherMotherEmail);
+                controller.setExamId(examId);
 
-            Stage stage = (Stage) backBtn.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+                Stage stage = (Stage) backBtn.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } else {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/buet/exam_system/TeacherDashboard.fxml"));
+                Scene scene = new Scene(loader.load());
+
+                TeacherDashboardController controller = loader.getController();
+                controller.setTeacherInfo(teacherName, teacherEmail,
+                        teacherFatherEmail, teacherMotherEmail);
+
+                Stage stage = (Stage) backBtn.getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,35 +138,62 @@ public class AddQuestionController implements Initializable {
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
 
-            String sql = "INSERT INTO questions (exam_id, question, option1, option2, option3, option4, correct_answer) VALUES (?,?,?,?,?,?,?)";
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.setInt(1, examId);
-            ps.setString(2, questionField.getText());
-            ps.setString(3, option1Field.getText());
-            ps.setString(4, option2Field.getText());
-            ps.setString(5, option3Field.getText());
-            ps.setString(6, option4Field.getText());
-            ps.setInt(7, Integer.parseInt(correctBox.getValue()));
-            ps.executeUpdate();
+            if (editQuestionId != -1) {
+                PreparedStatement ps = connect.prepareStatement(
+                        "UPDATE questions SET question=?, option1=?, option2=?, option3=?, option4=?, correct_answer=? WHERE id=?");
+                ps.setString(1, questionField.getText());
+                ps.setString(2, option1Field.getText());
+                ps.setString(3, option2Field.getText());
+                ps.setString(4, option3Field.getText());
+                ps.setString(5, option4Field.getText());
+                ps.setInt(6, Integer.parseInt(correctBox.getValue()));
+                ps.setInt(7, editQuestionId);
+                ps.executeUpdate();
 
-            String updateSql = "UPDATE exams SET total_marks = total_marks + 1 WHERE id=?";
-            PreparedStatement updatePs = connect.prepareStatement(updateSql);
-            updatePs.setInt(1, examId);
-            updatePs.executeUpdate();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Question Updated Successfully!");
+                alert.showAndWait();
 
-            questionField.clear();
-            option1Field.clear();
-            option2Field.clear();
-            option3Field.clear();
-            option4Field.clear();
-            correctBox.setValue(null);
-            updatePromptText();
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/buet/exam_system/ViewQuestions.fxml"));
+                Parent root = loader.load();
+                ViewQuestionsController controller = loader.getController();
+                controller.setTeacherInfo(teacherName, teacherEmail,
+                        teacherFatherEmail, teacherMotherEmail);
+                controller.setExamId(examId);
+                Stage stage = (Stage) backBtn.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Question Saved Successfully!");
-            alert.showAndWait();
+            } else {
+                PreparedStatement ps = connect.prepareStatement(
+                        "INSERT INTO questions (exam_id, question, option1, option2, option3, option4, correct_answer) VALUES (?,?,?,?,?,?,?)");
+                ps.setInt(1, examId);
+                ps.setString(2, questionField.getText());
+                ps.setString(3, option1Field.getText());
+                ps.setString(4, option2Field.getText());
+                ps.setString(5, option3Field.getText());
+                ps.setString(6, option4Field.getText());
+                ps.setInt(7, Integer.parseInt(correctBox.getValue()));
+                ps.executeUpdate();
+
+                PreparedStatement updatePs = connect.prepareStatement(
+                        "UPDATE exams SET total_marks = total_marks + 1 WHERE id=?");
+                updatePs.setInt(1, examId);
+                updatePs.executeUpdate();
+
+                questionField.clear();
+                option1Field.clear();
+                option2Field.clear();
+                option3Field.clear();
+                option4Field.clear();
+                correctBox.setValue(null);
+                updatePromptText();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Question Saved Successfully!");
+                alert.showAndWait();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

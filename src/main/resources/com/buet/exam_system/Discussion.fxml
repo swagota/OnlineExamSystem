@@ -4,41 +4,44 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f0f4ff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.buet.exam_system.DiscussionController">
 
+    <!-- TOP BAR -->
     <AnchorPane layoutX="0.0" layoutY="0.0" prefHeight="70.0" prefWidth="900" style="-fx-background-color: #1a2a4a;">
         <Label layoutX="30.0" layoutY="18.0" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" text="EXAMORA" />
         <Label layoutX="280.0" layoutY="22.0" style="-fx-text-fill: #6a9ae7; -fx-font-size: 18px; -fx-font-weight: bold;" text="Discussion Board" />
-        <Button fx:id="backBtn" layoutX="800" layoutY="17.0" onAction="#handleBack" prefHeight="35.0" prefWidth="80.0"
-                style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8px; -fx-cursor: hand;" text="&lt; Back" />
+        <Button fx:id="backBtn" layoutX="800" layoutY="17.0" onAction="#handleBack" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 13px; -fx-background-radius: 8px; -fx-cursor: hand;" text="HOME" />
     </AnchorPane>
 
+    <!-- LEFT PANEL -->
     <AnchorPane layoutX="0.0" layoutY="70.0" prefHeight="530.0" prefWidth="280.0" style="-fx-background-color: #1e3a5f;">
         <Label fx:id="leftPanelTitle" layoutX="20.0" layoutY="20.0" style="-fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold;" text="Ask a Question" />
         <Label fx:id="leftPanelSubtitle" layoutX="20.0" layoutY="48.0" prefWidth="240" style="-fx-text-fill: #aac4e8; -fx-font-size: 11px;" text="Type your question below and submit" />
-        <TextArea fx:id="questionInput" layoutX="15.0" layoutY="75.0" prefHeight="160.0" prefWidth="250.0"
-                  promptText="Write your question here..."
-                  style="-fx-background-color: white; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-border-radius: 8px;" />
-        <Button fx:id="submitBtn" layoutX="15.0" layoutY="248.0" onAction="#handleSubmit"
-                prefHeight="40.0" prefWidth="250.0"
-                style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;"
-                text="Submit Question" />
-        <Label layoutX="20.0" layoutY="310.0" prefWidth="240" style="-fx-text-fill: #aac4e8; -fx-font-size: 11px;" text="" />
-        <Label fx:id="myQuestionsTitle" layoutX="20.0" layoutY="320.0" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Your Questions" />
-        <ScrollPane fx:id="myQuestionsScroll" layoutX="10.0" layoutY="345.0" prefHeight="165.0" prefWidth="260.0"
-                    fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <TextArea fx:id="questionInput" layoutX="15.0" layoutY="75.0" prefHeight="160.0" prefWidth="250.0" promptText="Write your question here..." style="-fx-background-color: white; -fx-background-radius: 8px; -fx-font-size: 13px;" />
+        <Button fx:id="submitBtn" layoutX="15.0" layoutY="248.0" onAction="#handleSubmit" prefHeight="40.0" prefWidth="250.0" style="-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;" text="Submit Question" />
+        <Label fx:id="myQuestionsTitle" layoutX="20.0" layoutY="310.0" style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;" text="Your Questions" />
+        <ScrollPane fx:id="myQuestionsScroll" fitToWidth="true" layoutX="10.0" layoutY="335.0" prefHeight="180.0" prefWidth="260.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
             <VBox fx:id="myQuestionsBox" spacing="8.0" style="-fx-background-color: transparent; -fx-padding: 5;" />
         </ScrollPane>
     </AnchorPane>
 
+    <!-- RIGHT PANEL -->
     <AnchorPane layoutX="280.0" layoutY="70.0" prefHeight="530.0" prefWidth="620.0" style="-fx-background-color: #f0f4ff;">
-        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a2a4a;" text="All Questions" />
-        <Label fx:id="roleLabel" layoutX="500.0" layoutY="24.0" style="-fx-font-size: 12px; -fx-text-fill: #888;" text="" />
-        <ScrollPane layoutX="10.0" layoutY="50.0" prefHeight="465.0" prefWidth="600.0"
-                    fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+
+        <!-- Search bar row -->
+        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="15.0" spacing="8">
+            <TextField fx:id="searchField" prefHeight="34.0" prefWidth="420.0" promptText="🔍  Search questions..." style="-fx-background-color: white; -fx-background-radius: 8px;                               -fx-border-color: #dce8ff; -fx-border-radius: 8px;                               -fx-border-width: 1px; -fx-font-size: 13px; -fx-padding: 5 10 5 10;" />
+            <Button fx:id="searchBtn" onAction="#handleSearch" prefHeight="34.0" prefWidth="80.0" style="-fx-background-color: #1a2a4a; -fx-text-fill: white;                            -fx-font-size: 13px; -fx-background-radius: 8px; -fx-cursor: hand;" text="Search" />
+            <Button fx:id="clearBtn" onAction="#handleClearSearch" prefHeight="34.0" prefWidth="60.0" style="-fx-background-color: #bbb; -fx-text-fill: white;                            -fx-font-size: 12px; -fx-background-radius: 8px; -fx-cursor: hand;" text="Clear" />
+            <Label fx:id="roleLabel" style="-fx-font-size: 12px; -fx-text-fill: #888;" text="" />
+        </HBox>
+
+        <ScrollPane fitToWidth="true" layoutX="10.0" layoutY="58.0" prefHeight="457.0" prefWidth="600.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
             <VBox fx:id="allDiscussionsBox" spacing="12.0" style="-fx-background-color: transparent; -fx-padding: 5;" />
         </ScrollPane>
     </AnchorPane>

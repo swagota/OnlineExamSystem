@@ -30,7 +30,10 @@ public class ExamController implements Initializable {
     @FXML private Button submitBtn;
 
     private ToggleGroup optionsGroup;
-    private List<Question> questions = new ArrayList<>();
+    private List<Question> questions    = new ArrayList<>();
+    private List<Integer>  questionIds  = new ArrayList<>();  // DB id of each question
+    private List<Integer>  selectedAnswers = new ArrayList<>(); // student selected (1-4), 0=skipped
+
     private int currentQuestionIndex = 0;
     private double score = 0;
     private int totalSeconds = 0;
@@ -38,7 +41,6 @@ public class ExamController implements Initializable {
     private int examId;
     private String examName = "";
 
-    // Full student info
     private String studentUsername    = "";
     private String studentEmail       = "";
     private String studentFatherEmail = "";
@@ -54,10 +56,6 @@ public class ExamController implements Initializable {
         option4.setToggleGroup(optionsGroup);
     }
 
-    public void setStudentUsername(String username) {
-        this.studentUsername = username != null ? username : "";
-    }
-
     public void setStudentInfo(String username, String email,
                                String fatherEmail, String motherEmail, int role) {
         this.studentUsername    = username    != null ? username    : "";
@@ -67,9 +65,15 @@ public class ExamController implements Initializable {
         this.studentRole        = role;
     }
 
+    public void setStudentUsername(String username) {
+        this.studentUsername = username != null ? username : "";
+    }
+
     public void setExamId(int examId) {
         this.examId = examId;
         questions.clear();
+        questionIds.clear();
+        selectedAnswers.clear();
         currentQuestionIndex = 0;
         score = 0;
         optionsGroup.selectToggle(null);
@@ -84,6 +88,12 @@ public class ExamController implements Initializable {
             timerLabel.setText("⏱ 00:00");
             return;
         }
+
+        // Initialize selectedAnswers list with 0 (unanswered)
+        for (int i = 0; i < questions.size(); i++) {
+            selectedAnswers.add(0);
+        }
+
         loadQuestion();
         startTimer();
     }
@@ -104,13 +114,15 @@ public class ExamController implements Initializable {
 
     private void loadQuestionsFromDatabase() {
         questions.clear();
+        questionIds.clear();
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
             PreparedStatement ps = connect.prepareStatement(
-                    "SELECT * FROM questions WHERE exam_id = ?");
+                    "SELECT * FROM questions WHERE exam_id = ? ORDER BY id ASC");
             ps.setInt(1, examId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                questionIds.add(rs.getInt("id"));
                 questions.add(new Question(
                         rs.getString("question"),
                         new String[]{rs.getString("option1"), rs.getString("option2"),
@@ -130,7 +142,15 @@ public class ExamController implements Initializable {
         option4.setText(q.getOptions()[3]);
         option1.setDisable(false); option2.setDisable(false);
         option3.setDisable(false); option4.setDisable(false);
-        optionsGroup.selectToggle(null);
+
+        // Restore previously selected answer if navigating back
+        int prev = selectedAnswers.get(currentQuestionIndex);
+        if      (prev == 1) option1.setSelected(true);
+        else if (prev == 2) option2.setSelected(true);
+        else if (prev == 3) option3.setSelected(true);
+        else if (prev == 4) option4.setSelected(true);
+        else optionsGroup.selectToggle(null);
+
         boolean isLast = currentQuestionIndex >= questions.size() - 1;
         nextBtn.setVisible(!isLast);
         nextBtn.setDisable(isLast);
@@ -143,7 +163,12 @@ public class ExamController implements Initializable {
         countdown = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             totalSeconds--;
             updateTimerLabel();
-            if (totalSeconds <= 0) { countdown.stop(); checkAnswer(); showResult(); }
+            if (totalSeconds <= 0) {
+                countdown.stop();
+                recordCurrentAnswer();
+                calculateScore();
+                showResult();
+            }
         }));
         countdown.setCycleCount(Animation.INDEFINITE);
         countdown.play();
@@ -155,99 +180,127 @@ public class ExamController implements Initializable {
                 "; -fx-font-weight: bold; -fx-font-size: 22px;");
     }
 
-    @FXML private void handleNext() {
-        checkAnswer();
+    @FXML
+    private void handleNext() {
+        recordCurrentAnswer();
         currentQuestionIndex++;
         if (currentQuestionIndex < questions.size()) loadQuestion();
-        else { if (countdown != null) countdown.stop(); showResult(); }
+        else { if (countdown != null) countdown.stop(); calculateScore(); showResult(); }
     }
 
-    @FXML private void handleSubmit() {
-        checkAnswer();
+    @FXML
+    private void handleSubmit() {
+        recordCurrentAnswer();
         if (countdown != null) countdown.stop();
-        if (score < 0) {
-            score = 0;
-        }
+        calculateScore();
         showResult();
     }
 
-    private void checkAnswer() {
-        if (questions.isEmpty() || currentQuestionIndex >= questions.size()) return;
+    /** Save current selection to selectedAnswers list */
+    private void recordCurrentAnswer() {
+        if (currentQuestionIndex >= questions.size()) return;
         RadioButton sel = (RadioButton) optionsGroup.getSelectedToggle();
-        if (sel == null) return;
-        int idx = sel == option1 ? 0 : sel == option2 ? 1 : sel == option3 ? 2 : 3;
-        if (idx == questions.get(currentQuestionIndex).getCorrectIndex()) {
-            score += 1;
-        } else {
-            score -= 0.25;
-        }
+        int chosen = 0;
+        if      (sel == option1) chosen = 1;
+        else if (sel == option2) chosen = 2;
+        else if (sel == option3) chosen = 3;
+        else if (sel == option4) chosen = 4;
+        selectedAnswers.set(currentQuestionIndex, chosen);
     }
 
-    private void saveResultToDb() {
+    /** Calculate score from selectedAnswers (+1 correct, -0.25 wrong) */
+    private void calculateScore() {
+        score = 0;
+        for (int i = 0; i < questions.size(); i++) {
+            int chosen  = selectedAnswers.get(i);
+            int correct = questions.get(i).getCorrectIndex() + 1; // 1-based
+            if (chosen == 0) continue; // skipped
+            if (chosen == correct) score += 1;
+            else score -= 0.25;
+        }
+        if (score < 0) score = 0;
+    }
+
+    private int saveResultToDb() {
+        int resultId = -1;
         try (Connection connect = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/admin", "root", "")) {
-            connect.createStatement().executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS results (" +
-                            "id INT AUTO_INCREMENT PRIMARY KEY," +
-                            "username VARCHAR(100)," +
-                            "exam_id INT," +
-                            "exam_name VARCHAR(200)," +
-                            "score DECIMAL(5,2)," +
-                            "total INT," +
-                            "submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
-            );
+
             PreparedStatement ps = connect.prepareStatement(
-                    "INSERT INTO results (username, exam_id, exam_name, score, total) VALUES (?,?,?,?,?)");
+                    "INSERT INTO results (username, exam_id, exam_name, score, total) VALUES (?,?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, studentUsername);
             ps.setInt(2, examId);
             ps.setString(3, examName);
             ps.setDouble(4, score);
             ps.setInt(5, questions.size());
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) resultId = rs.getInt(1);
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return resultId;
+    }
+
+    private void saveAnswersToDb(int resultId) {
+        if (resultId == -1) return;
+        try (Connection connect = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/admin", "root", "")) {
+
+            PreparedStatement ps = connect.prepareStatement(
+                    "INSERT INTO result_answers (result_id, question_id, question_text, " +
+                            "option1, option2, option3, option4, selected_answer, correct_answer, is_correct) " +
+                            "VALUES (?,?,?,?,?,?,?,?,?,?)");
+
+            for (int i = 0; i < questions.size(); i++) {
+                Question q      = questions.get(i);
+                int chosen      = selectedAnswers.get(i);
+                int correct     = q.getCorrectIndex() + 1; // 1-based
+                boolean isCorrect = (chosen != 0 && chosen == correct);
+
+                ps.setInt(1, resultId);
+                ps.setInt(2, questionIds.get(i));
+                ps.setString(3, q.getQuestion());
+                ps.setString(4, q.getOptions()[0]);
+                ps.setString(5, q.getOptions()[1]);
+                ps.setString(6, q.getOptions()[2]);
+                ps.setString(7, q.getOptions()[3]);
+                ps.setInt(8, chosen);
+                ps.setInt(9, correct);
+                ps.setBoolean(10, isCorrect);
+                ps.addBatch();
+            }
+            ps.executeBatch();
+
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     private void showResult() {
+        int resultId = saveResultToDb();
+        saveAnswersToDb(resultId);
 
-        //System.out.println("Father email: [" + studentFatherEmail + "]");
-        //System.out.println("Mother email: [" + studentMotherEmail + "]");
-        saveResultToDb();
+        new Thread(() -> {
+            EmailSender.sendResultMail(studentFatherEmail, studentUsername,
+                    examName, score, questions.size());
+            EmailSender.sendResultMail(studentMotherEmail, studentUsername,
+                    examName, score, questions.size());
+        }).start();
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/com/buet/exam_system/Result.fxml"));
             Parent root = loader.load();
             ResultController rc = loader.getController();
-
             rc.setStudentInfo(studentUsername, studentEmail,
                     studentFatherEmail, studentMotherEmail, studentRole);
-
             rc.setResult(score, questions.size());
+            rc.setResultId(resultId); // pass resultId for review
 
             Stage stage = (Stage) submitBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.centerOnScreen();
             stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        new Thread(() -> {
-            EmailSender.sendResultMail(
-                    studentFatherEmail,
-                    studentUsername,
-                    examName,
-                    score,
-                    questions.size()
-            );
-
-            EmailSender.sendResultMail(
-                    studentMotherEmail,
-                    studentUsername,
-                    examName,
-                    score,
-                    questions.size()
-            );
-        }).start();
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }

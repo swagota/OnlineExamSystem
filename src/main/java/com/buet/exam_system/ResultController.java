@@ -23,7 +23,7 @@ public class ResultController {
     private String studentFatherEmail = "";
     private String studentMotherEmail = "";
     private int    studentRole        = 2;
-
+    private int resultId;
     public void setStudentUsername(String username) {
         this.studentUsername = username != null ? username : "";
     }
@@ -37,19 +37,21 @@ public class ResultController {
         this.studentRole        = role;
     }
 
+    public void setResultId(int resultId) {
+        this.resultId = resultId;
+    }
+
     public void setResult(double score, int total) {
-        double pct   = total > 0 ? (score * 100.0 / total) : 0;
-        double wrong = total - score;
-        String emoji = pct >= 60 ? "🎉" : "📚";
+        double cleanScore = Math.round(score * 100.0) / 100.0;
+        double pct        = total > 0 ? (cleanScore * 100.0 / total) : 0;
+        String emoji      = pct >= 60 ? "🎉" : "📚";
 
         emojiLabel.setText(emoji);
-        scoreLabel.setText(score + " / " + total);
+        scoreLabel.setText(String.format("%.2f", cleanScore) + " / " + total);
         percentLabel.setText(String.format("%.1f%%  correct", pct));
-        correctLabel.setText(String.valueOf(total-(wrong/1.25)));
-        wrongLabel.setText(String.valueOf(wrong/1.25));
+        correctLabel.setText(String.format("%.2f", cleanScore));
+        wrongLabel.setText(String.format("%.2f", total - cleanScore));
         totalLabel.setText(String.valueOf(total));
-
-        //System.out.println(score);
     }
 
     @FXML

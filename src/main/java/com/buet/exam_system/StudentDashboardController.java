@@ -43,9 +43,23 @@ public class StudentDashboardController {
     @FXML private Label welcomeLabel;
     @FXML private Label studentName;
 
+    private static final String BTN_NORMAL = "-fx-background-color: #6a9ae7; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;";
+    private static final String BTN_HOVER  = "-fx-background-color: white; -fx-text-fill: #1a2a4a; -fx-font-size: 14px; -fx-background-radius: 8px; -fx-cursor: hand;";
+
     @FXML
     public void initialize() {
-        if (profileBtn != null) profileBtn.setOnAction(e -> handleProfile());
+        if (profileBtn     != null) profileBtn.setOnAction(e -> handleProfile());
+        applyHoverEffects();
+    }
+
+    private void applyHoverEffects() {
+        for (Button btn : new Button[]{startBtn, resultBtn, profileBtn, performanceBtn, discussionBtn}) {
+            if (btn != null) {
+                btn.setStyle(BTN_NORMAL);
+                btn.setOnMouseEntered(e -> btn.setStyle(BTN_HOVER));
+                btn.setOnMouseExited(e  -> btn.setStyle(BTN_NORMAL));
+            }
+        }
     }
 
     public void setStudentInfo(String username, String email, String fatherEmail,
